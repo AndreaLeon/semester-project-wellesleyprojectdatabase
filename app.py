@@ -1,4 +1,4 @@
-# Andrea León, Eliana Marostica, and Parul Kohl
+# Andrea Leon, Eliana Marostica, and Parul Kohl
 # CS304 Final Project: Wellesley Project Database
 # app.py 
 # created 4/28/2018
@@ -11,7 +11,6 @@ app = Flask(__name__)
 
 import sys,os,random
 import dbconn2
-import updateMovie
 import json
 
 app.secret_key = 'your secret here'
