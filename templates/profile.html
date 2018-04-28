@@ -1,0 +1,23 @@
+{% extends "base.html"%}
+
+{% block content %}
+
+<div id="content">
+  
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul class=flashes>
+    {% for message in messages %}
+    <div class="uk-text-primary"><li>{{ message }} </li></div>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endwith%}
+  
+</div>
+ 
+<h1>Wellesley Project Database</h1>
+<h2>Profiles</h2>
+
+{% endblock%}
+ 

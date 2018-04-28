@@ -41,3 +41,4 @@ if __name__ == '__main__':
     DSN['db'] = 'wprojdb_db'
     app.debug = True
     app.run('0.0.0.0',port)
+
