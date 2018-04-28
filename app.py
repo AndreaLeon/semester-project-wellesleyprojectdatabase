@@ -28,10 +28,10 @@ def index():
   return render_template('main.html',
                            title='Main Page')
                            
-@app.route('/profile')
-def index():
-  return render_template('profile.html',
-                           title='Profiles')
+# @app.route('/profile')
+# def index():
+#   return render_template('profile.html',
+#                            title='Profiles')
 
 if __name__ == '__main__':
 
