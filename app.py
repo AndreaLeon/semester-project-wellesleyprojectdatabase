@@ -27,6 +27,11 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 def index():
   return render_template('main.html',
                            title='Main Page')
+                           
+@app.route('/profile')
+def index():
+  return render_template('profile.html',
+                           title='Profiles')
 
 if __name__ == '__main__':
 
@@ -40,3 +45,6 @@ if __name__ == '__main__':
     DSN['db'] = 'wprojdb_db'
     app.debug = True
     app.run('0.0.0.0',port)
+
+
+
