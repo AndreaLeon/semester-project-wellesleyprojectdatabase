@@ -27,6 +27,27 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 def index():
   return render_template('main.html',
                            title='Main Page')
+
+@app.route('/login/', methods=['GET','POST'])
+def login():
+  conn = dbconn2.connect(DSN)
+  if request.method == 'GET':
+    return render_template('login.html')
+  else:
+    email = request.form['email']
+    password = request.form['passwd']
+    flash('Login Succeded')
+    # #check that login hasn't been formed yet
+    # if staffExists is not None and password == 'secret':
+    #   resp = make_response(redirect(url_for('login')))
+    #   resp.set_cookie('uid', username)                                        
+    #   flash('Login Succeeded')
+    #   return resp
+    # else:
+    #   flash('Login Failed. Please try again.')
+      
+    return redirect(url_for('login'))
+
                            
 # @app.route('/profile')
 # def index():

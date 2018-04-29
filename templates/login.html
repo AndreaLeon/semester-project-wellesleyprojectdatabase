@@ -1,0 +1,35 @@
+<!-- Eliana Marostica and Mana Muchaku
+     Hwk6: Ajax
+     Created 4/7/18
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+
+  <div id="flashes">
+    {% for message in get_flashed_messages() %}
+	     {{ message }}
+	  {% endfor %}
+  </div>
+      
+      
+
+  <h1>Login to Rate Movies</h1>
+
+  <form method="post" action="">
+      <p><label for="email">Email: <input type="text" name="email"></label></p>
+      <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
+      <p><button type="submit">submit</button></p>
+  </form>
+      
+
+
+    </div>
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <!-- JS code would go here -->
+    
+
+{% endblock %}
