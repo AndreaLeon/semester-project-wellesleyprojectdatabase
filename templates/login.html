@@ -12,17 +12,27 @@
 	     {{ message }}
 	  {% endfor %}
   </div>
-      
-      
+
 
   <h1>Login</h1>
 
   <form method="post" action="">
-      <p><label for="email">Email: <input type="text" name="email"></label></p>
-      <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
-      <p><button type="submit">submit</button></p>
+      <p><label for="login_email">Email: <input type="text" name="login_email"></label></p>
+      <p><label for="login_passwd">Password: <input type="password" name="login_passwd"></label></p>
+      <p><button type="submit">Login</button></p>
   </form>
-      
+  
+
+  <h1>New to WPDB? Join Here!</h1>
+
+  <form method="post" action="">
+      <p><label for="join_email">Email: <input type="text" name="join_email"></label></p>
+      <p><label for="join_passwd1">Password: <input type="password" name="join_passwd1"></label></p>
+      <p><label for="join_passwd2">Re-Type Password: <input type="password" name="join_passwd2"></label></p>
+      <!--TO DO: implement Ajax to test if passwords match -->
+      <p><button type="submit">Join</button></p>
+  </form>
+
 
 
     </div>

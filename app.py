@@ -34,9 +34,27 @@ def login():
   if request.method == 'GET':
     return render_template('login.html')
   else:
-    email = request.form['email']
-    password = request.form['passwd']
-    flash('Login Succeded')
+    try:
+      email = request.form['login_email']
+      password = request.form['login_passwd']
+      flash('Login Succeded')
+    except Exception as e:
+      flash('Not a Login Attempt')
+
+    try:
+      email = request.form['join_email']
+      password1 = request.form['join_passwd1']
+      password2 = request.form['join_passwd2']
+      flash('Join Succeded')
+    except Exception as e:
+      flash('Not a Join Attempt')
+    #finish here <----------------------------------------
+    #TO DO:
+    #test this code:
+    #make sure forms are properly rendered
+    #make sure that the correct flashes are displayed
+
+    
     # #check that login hasn't been formed yet
     # if staffExists is not None and password == 'secret':
     #   resp = make_response(redirect(url_for('login')))
