@@ -31,52 +31,66 @@ def index():
                            title='Main Page')
 
 
-# @app.route('/join/', methods=["POST"])
-# def join():
-#     try:
-#         email = request.form['email']
-#         passwd1 = request.form['passwd1']
-#         passwd2 = request.form['passwd2']
-#         if passwd1 != passwd2:
-#             flash('Passwords do not match')
-#             return redirect(url_for('login'))
-#         hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
-#         row = updateDB.addUser(conn, email, hashed)
-#         if row is not None:
-#             flash('That username is taken')
-#             return redirect( url_for('index') )
-#         curs.execute('INSERT into userpass(username,hashed) VALUES(%s,%s)',
-#                      [username, hashed])
-#         session['username'] = username
-#         session['logged_in'] = True
-#         session['visits'] = 1
-#         return redirect( url_for('user', username=username) )
-#     except Exception as err:
-#         flash('form submission error '+str(err))
-#         return redirect( url_for('index') )
+@app.route('/join/', methods=["POST"])
+def join():
+    try:
+#TODO: what if user doesn't input name, etc? What if name has numbers? ###################################
+        name = request.form['name']
+        email = request.form['email']
+        passwd1 = request.form['passwd1']
+        passwd2 = request.form['passwd2']
+        rolelist = request.form.getlist('role')
+        role = ','.join(rolelist)
+        if passwd1 != passwd2:
+            flash('Passwords do not match')
+            return redirect(url_for('login'))
+        hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
+        conn = dbconn2.connect(dsn)
+
+        #check whether account already exists with that email
+        row = updateDB.checkUser(conn, email)
+        if row is not None:
+            flash('An account with that email already exists')
+            return redirect( url_for('login') )
+        
+        #insert new user into user table
+        updateDB.addUser(conn, email, name, role, hashed)
+
+        #TO DO: sessions ###########################################################################################
+        # session['username'] = username
+        # session['logged_in'] = True
+        # session['visits'] = 1
+        # return redirect( url_for('user', username=username) )
+        flash('inserted email')
+        return redirect(url_for('index')) #need to change once session are incorporated ###################################
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+
 
 
 #login 
 @app.route('/login/', methods=['GET','POST'])
 def login():
-  conn = dbconn2.connect(DSN)
+  conn = dbconn2.connect(dsn)
   if request.method == 'GET':
     return render_template('login.html')
   else:
-    try:
-      email = request.form['login_email']
-      password = request.form['login_passwd']
-      flash('Login Succeded')
-    except Exception as e:
-      flash('Not a Login Attempt')
+    return redirect( url_for('index') )
+  #   try:
+  #     email = request.form['login_email']
+  #     password = request.form['login_passwd']
+  #     flash('Login Succeded')
+  #   except Exception as e:
+  #     flash('Not a Login Attempt')
 
-    try:
-      email = request.form['join_email']
-      password1 = request.form['join_passwd1']
-      password2 = request.form['join_passwd2']
-      flash('Join Succeded')
-    except Exception as e:
-      flash('Not a Join Attempt')
+  #   try:
+  #     email = request.form['join_email']
+  #     password1 = request.form['join_passwd1']
+  #     password2 = request.form['join_passwd2']
+  #     flash('Join Succeded')
+  #   except Exception as e:
+  #     flash('Not a Join Attempt')
 
     
     # #check that login hasn't been formed yet
@@ -104,8 +118,8 @@ if __name__ == '__main__':
         assert(port>1024)
     else:
         port = os.getuid()
-    DSN = dbconn2.read_cnf()
-    DSN['db'] = 'wprojdb_db'
+    dsn = dbconn2.read_cnf()
+    dsn['db'] = 'wprojdb_db'
     app.debug = True
     app.run('0.0.0.0',port)
 

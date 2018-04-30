@@ -14,12 +14,14 @@ import dbconn2
 
 #TO DO: Insert Functions Below
 
-# def addUser(conn,):
-# 	conn = dbconn2.connect(dsn)
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('SELECT username FROM userpass WHERE username = %s',
-#                      [username])
-#     return curs.fetchone()
+def checkUser(conn, email):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT email FROM user WHERE email = %s', [email])
+	return curs.fetchone()
+
+def addUser(conn, email, name, role, hashed):
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT into user(email,name,role,hashed) VALUES(%s,%s,%s,%s)', [email, name, role, hashed])
 
 
 
