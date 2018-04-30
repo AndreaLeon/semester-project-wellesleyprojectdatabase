@@ -48,11 +48,6 @@ def login():
       flash('Join Succeded')
     except Exception as e:
       flash('Not a Join Attempt')
-    #finish here <----------------------------------------
-    #TO DO:
-    #test this code:
-    #make sure forms are properly rendered
-    #make sure that the correct flashes are displayed
 
     
     # #check that login hasn't been formed yet

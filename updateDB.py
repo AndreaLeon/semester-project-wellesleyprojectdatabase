@@ -1,6 +1,6 @@
 # Andrea Leon, Eliana Marostica, and Parul Kohl
 # CS304 Final Project: Wellesley Project Database
-# app.py 
+# updateDB.py
 # created 4/29/2018
 #!/usr/local/bin/python2.7
 
@@ -13,6 +13,7 @@ import dbconn2
 # The functions that do most of the work.  
 
 #TO DO: Insert Functions Below
+
 
 
 
