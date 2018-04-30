@@ -14,7 +14,12 @@ import dbconn2
 
 #TO DO: Insert Functions Below
 
-
+# def addUser(conn,):
+# 	conn = dbconn2.connect(dsn)
+#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
+#     curs.execute('SELECT username FROM userpass WHERE username = %s',
+#                      [username])
+#     return curs.fetchone()
 
 
 

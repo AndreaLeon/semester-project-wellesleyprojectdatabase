@@ -10,8 +10,10 @@ from werkzeug import secure_filename
 app = Flask(__name__)
 
 import sys,os,random
+import bcrypt
 import dbconn2
 import json
+import updateDB
 
 app.secret_key = 'your secret here'
 # replace that with a random key
@@ -28,6 +30,33 @@ def index():
   return render_template('main.html',
                            title='Main Page')
 
+
+# @app.route('/join/', methods=["POST"])
+# def join():
+#     try:
+#         email = request.form['email']
+#         passwd1 = request.form['passwd1']
+#         passwd2 = request.form['passwd2']
+#         if passwd1 != passwd2:
+#             flash('Passwords do not match')
+#             return redirect(url_for('login'))
+#         hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
+#         row = updateDB.addUser(conn, email, hashed)
+#         if row is not None:
+#             flash('That username is taken')
+#             return redirect( url_for('index') )
+#         curs.execute('INSERT into userpass(username,hashed) VALUES(%s,%s)',
+#                      [username, hashed])
+#         session['username'] = username
+#         session['logged_in'] = True
+#         session['visits'] = 1
+#         return redirect( url_for('user', username=username) )
+#     except Exception as err:
+#         flash('form submission error '+str(err))
+#         return redirect( url_for('index') )
+
+
+#login 
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(DSN)
