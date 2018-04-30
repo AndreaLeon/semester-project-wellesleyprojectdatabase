@@ -96,6 +96,16 @@ def login():
 #   return render_template('profile.html',
 #                            title='Profiles')
 
+
+@app.route('/createProject', methods=['GET', 'POST'])
+def createProject():
+  if request.method == 'POST':
+    # TO DO: check all form boxes filled
+     flash ("Project Submitted")
+  return render_template('project.html')
+
+
+
 if __name__ == '__main__':
 
     if len(sys.argv) > 1:
