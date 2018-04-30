@@ -16,6 +16,10 @@ CREATE TABLE project(
 	creator int(10) unsigned NOT NULL,
 	approver int(10) unsigned, 
 	name varchar(50) NOT NULL,
+	requirements varchar(150) NOT NULL,
+	compensation varchar(100) NOT NULL,
+	rolesOpen int(3) NOT NULL,
+	description varchar(300) NOT NULL,
 	duration enum('Unknown', 'Less than a month', '1-3 months', '3-6 months', 'More than 6 months', 'Over a year') not null,
 	foreign key (creator) references user(uid) on delete cascade on update cascade,
 	foreign key (approver) references user(uid) on delete set null on update cascade
