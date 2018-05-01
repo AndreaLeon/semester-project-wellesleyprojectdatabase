@@ -14,13 +14,6 @@ import dbconn2
 
 #TO DO: Insert Functions Below
 
-def checkUser(conn, email):
-	'''Finds if user exists in user table based on email
-		By: Eliana Marostica'''
-	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT email FROM user WHERE email = %s', [email])
-	return curs.fetchone()
-
 # def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc)
 #	'''Adds project to project table
 #		by: Andrea Leon'''
@@ -29,6 +22,13 @@ def checkUser(conn, email):
 #     	description, duration) values (%s, %s, %s, %s, %s, %s)', [projCreator, \
 #     	projName, projDur, projComp, projRoles, projReq, projDesc])
 #     return "Project created"
+
+def checkUser(conn, email):
+	'''Finds if user exists in user table based on email
+		By: Eliana Marostica'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT email FROM user WHERE email = %s', [email])
+	return curs.fetchone()
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
@@ -58,8 +58,6 @@ def getName(conn, email):
 	curs.execute('SELECT name FROM user WHERE email = %s', [email])
 	row = curs.fetchone()
 	return row['name']
-
->>>>>>> 752342286e9998ca746e8a6a7e02675267d6b9e9
 
 
 # ================================================================
