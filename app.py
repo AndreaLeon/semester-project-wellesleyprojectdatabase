@@ -127,10 +127,28 @@ def user(uid):
         flash('some kind of error '+str(err))
         return redirect( url_for('index') )
                            
-# @app.route('/profile')
-# def index():
-#   return render_template('profile.html',
-#                            title='Profiles')
+@app.route('/createProfile',  methods=['GET', 'POST'])
+def createProfile():
+  conn = dbconn2.connect(dsn)
+  if request.method == 'POST':
+    try: 
+      if 'uid' in session:
+        uid = session['uid']
+        major = request.form['major']
+        prog_languages = request.form['prog_languages']
+        courses = request.form['courses']
+        research_exp = request.form['research_exp']
+        internship_exp = request.form['internship_exp']
+        bg_info = request.form['bg_info']
+        updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
+        internship_exp, bg_info, uid)
+        flash ("Profile Update Submitted")
+      else:
+        flash("You have to be logged in to access this page.")
+    except Exception as e:
+      flash(e)
+      flash('Incorrectly filled, try again')
+  return render_template('profile.html')
 
 
 @app.route('/createProject', methods=['GET', 'POST'])
@@ -155,6 +173,8 @@ def createProject():
     except Exception as e:
       flash('Incorrectly filled, try again')
   return render_template('project.html')
+
+
 
 
 
