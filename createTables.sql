@@ -1,6 +1,7 @@
 
 use wprojdb_db;
 
+/* ## Eliana's original code
 DROP TABLE if exists user;
 CREATE TABLE user(
 	uid int(10) unsigned AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -8,6 +9,22 @@ CREATE TABLE user(
     name varchar(50) NOT NULL,
     role set('student', 'client', 'administrator') NOT NULL,
 	hashed char(60) NOT NULL
+) engine=InnoDB;
+*/
+
+DROP TABLE if exists user;
+CREATE TABLE user(
+	uid int(10) unsigned AUTO_INCREMENT PRIMARY KEY NOT NULL,
+ 	email varchar(50) NOT NULL,
+    	name varchar(50) NOT NULL,
+    	role set('student', 'client', 'administrator') NOT NULL,
+	hashed char(60) NOT NULL, 
+    	major varchar(50),
+    	programming_languages varchar(100),
+    	courses varchar(100),
+    	research_experience varchar(225),
+    	internship_experience varchar(225),
+    	background_info varchar(225)
 ) engine=InnoDB;
 
 DROP TABLE if exists project;
