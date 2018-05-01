@@ -1,4 +1,3 @@
-
 use wprojdb_db;
 
 /* ## Eliana's original code
@@ -15,16 +14,16 @@ CREATE TABLE user(
 DROP TABLE if exists user;
 CREATE TABLE user(
 	uid int(10) unsigned AUTO_INCREMENT PRIMARY KEY NOT NULL,
- 	email varchar(50) NOT NULL,
-    	name varchar(50) NOT NULL,
-    	role set('student', 'client', 'administrator') NOT NULL,
+    email varchar(50) NOT NULL,
+    name varchar(50) NOT NULL,
+    role set('student', 'client', 'administrator') NOT NULL,
 	hashed char(60) NOT NULL, 
-    	major varchar(50),
-    	programming_languages varchar(100),
-    	courses varchar(100),
-    	research_experience varchar(225),
-    	internship_experience varchar(225),
-    	background_info varchar(225)
+    major varchar(50),
+    programming_languages varchar(100),
+    courses varchar(100),
+    research_experience varchar(225),
+    internship_experience varchar(225),
+    background_info varchar(225)
 ) engine=InnoDB;
 
 DROP TABLE if exists project;
@@ -49,3 +48,4 @@ CREATE TABLE application(
 	foreign key (uid) references user(uid) on delete cascade on update cascade, 
 	foreign key (pid) references project(pid) on delete cascade on update cascade
 ) engine=InnoDB;
+>>>>>>> c366d058011d5f23416fda1816a2b1e861a50c5e
