@@ -28,13 +28,6 @@ def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projRe
 	curs.execute('INSERT into project (creator, name, compensation, rolesOpen,requirements, description,\
 	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
 
-def checkUser(conn, email):
-	'''Finds if user exists in user table based on email
-		By: Eliana Marostica'''
-	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT email FROM user WHERE email = %s', [email])
-	return curs.fetchone()
-
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
 		By: Eliana Marostica'''
@@ -65,6 +58,7 @@ def getName(conn, email):
 	return row['name']
 
 def updateUser(conn, major, prog_languages, courses, research_exp, internship_exp, bg_info, uid):
+
 	'''Updates the user table to add the information input by the
 	user on the profile.html page
 		By: Parul Koul'''
@@ -85,4 +79,4 @@ if __name__ == '__main__':
         DSN = dbconn2.read_cnf()
         DSN['db'] = 'wprojdb_db'     # the database we want to connect to
         dbconn2.connect(DSN)
-        print lookupByNM(sys.argv[1])
+	print lookupByNM(sys.argv[1])
