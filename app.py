@@ -99,9 +99,20 @@ def login():
 
 @app.route('/createProject', methods=['GET', 'POST'])
 def createProject():
+  #conn = dbconn2.connect(DSN)
   if request.method == 'POST':
-    # TO DO: check all form boxes filled
-     flash ("Project Submitted")
+    try: 
+      projName = request.form['projectTitle']
+      projDur = request.form['duration']
+      projComp = request.form['compensation']
+      projRoles = request.form['rolesOpen']
+      projReq = request.form['requirements']
+      projDesc = request.form['description']
+      #addProject(conn, projCreator, projName, projDur, projComp,\
+      # projRoles, projReq, projDesc)
+      flash ("Project Submitted")
+    except Exception as e:
+      flash('Incorrectly filled, try again')
   return render_template('project.html')
 
 
