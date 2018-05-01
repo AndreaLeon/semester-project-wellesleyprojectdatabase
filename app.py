@@ -54,14 +54,16 @@ def join():
         
         #insert new user into user table
         updateDB.addUser(conn, email, name, role, hashed)
+        uid = updateDB.getUID(conn, email)
 
-        #TO DO: sessions ###########################################################################################
-        # session['username'] = username
-        # session['logged_in'] = True
+        session['uid'] = uid
+        session['logged_in'] = True
+        session['name'] = name
         # session['visits'] = 1
-        # return redirect( url_for('user', username=username) )
-        flash('inserted email')
-        return redirect(url_for('index')) #need to change once session are incorporated ###################################
+
+        flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+        return redirect( url_for('user', uid=uid) )
+
     except Exception as err:
         flash('form submission error '+str(err))
         return redirect( url_for('index') )
@@ -78,7 +80,6 @@ def login():
     try:
         email = request.form['email']
         passwd = request.form['passwd']
-        conn = dbconn2.connect(dsn)
         row = updateDB.fetchHashed(conn, email)
         if row is None:
             # Same response as wrong password, so no information about what went wrong
@@ -90,7 +91,7 @@ def login():
             uid = updateDB.getUID(conn, email)
             name = updateDB.getName(conn, email)
 
-            flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+            flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
             session['uid'] = uid
             session['logged_in'] = True
             session['name'] = name
