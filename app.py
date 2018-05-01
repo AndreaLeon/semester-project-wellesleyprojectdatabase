@@ -170,6 +170,3 @@ if __name__ == '__main__':
     dsn['db'] = 'wprojdb_db'
     app.debug = True
     app.run('0.0.0.0',port)
-
-
-

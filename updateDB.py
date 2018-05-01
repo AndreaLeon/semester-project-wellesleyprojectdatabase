@@ -57,6 +57,14 @@ def getName(conn, email):
 	row = curs.fetchone()
 	return row['name']
 
+def updateUser(conn, major, prog_languages, courses, research_exp, internship_exp, bg_info, uid):
+        '''Updates the user table to add the information input by the^M                                                                                                       
+        user on the profile.html page
+                By: Parul Koul'''
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('UPDATE user SET major = %s, programming_languages = %s, courses = %s, \
+        research_experience = %s, internship_experience = %s, background_info = %s WHERE uid = %s;',
+        [major, prog_languages, courses, research_exp, internship_exp, bg_info, uid])
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
@@ -69,4 +77,4 @@ if __name__ == '__main__':
         DSN = dbconn2.read_cnf()
         DSN['db'] = 'wprojdb_db'     # the database we want to connect to
         dbconn2.connect(DSN)
-        print lookupByNM(sys.argv[1])
+	print lookupByNM(sys.argv[1])
