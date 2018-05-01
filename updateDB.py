@@ -28,6 +28,13 @@ def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projRe
 	curs.execute('INSERT into project (creator, name, compensation, rolesOpen,requirements, description,\
 	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
 
+def checkUser(conn, email):
+	'''Finds if user exists in user table based on email
+		By: Eliana Marostica'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT email FROM user WHERE email = %s', [email])
+	return curs.fetchone()
+
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
 		By: Eliana Marostica'''

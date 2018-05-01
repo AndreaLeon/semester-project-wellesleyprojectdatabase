@@ -61,7 +61,7 @@ def join():
         session['name'] = name
         # session['visits'] = 1
 
-        flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+        flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
         return redirect( url_for('user', uid=uid) )
 
     except Exception as err:
@@ -91,7 +91,7 @@ def login():
             uid = updateDB.getUID(conn, email)
             name = updateDB.getName(conn, email)
 
-            flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
+            flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
             session['uid'] = uid
             session['logged_in'] = True
             session['name'] = name
@@ -115,8 +115,8 @@ def user(uid):
             name = session['name']
             # session['visits'] = 1+int(session['visits']) ------------> keep track of number of visits???????
             return render_template('greet.html',
-                                    title= 'Your Home',
-                                    name= name#,
+                                    title='Welcome '+name
+                                    #name= name#,
                                    #visits=session['visits'] ------------> keep track of number of visits???????
                                    )
 
