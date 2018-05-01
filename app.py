@@ -22,7 +22,6 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
                                           '0123456789'))
                            for i in range(20) ])
 
-# This gets us better error messages for certain common request errors
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 @app.route('/')
@@ -81,7 +80,6 @@ def login():
     try:
         email = request.form['email']
         passwd = request.form['passwd']
-        print('passwd: ' + passwd, passwd.encode('utf-8'))
         conn = dbconn2.connect(dsn)
         row = updateDB.fetchHashed(conn, email)
         if row is None:
@@ -89,9 +87,7 @@ def login():
             flash('Login incorrect. Try again or join.')
             return redirect( url_for('login'))
         hashed = row['hashed']
-        print('hashed: ' + hashed,hashed.encode('utf-8'))
 
-        print bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
         if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
             uid = updateDB.getUID(conn, email)
             name = updateDB.getName(conn, email)
@@ -115,14 +111,13 @@ def login():
 @app.route('/user/<uid>')
 def user(uid):
     try:
-        # don't trust the URL; it's only there for decoration
         if 'uid' in session:
             uid = session['uid']
             name = session['name']
             # session['visits'] = 1+int(session['visits']) ------------> keep track of number of visits???????
             return render_template('greet.html',
-                                   page_title='My App: Welcome '+ name,
-                                   name= name#,
+                                    title= 'Your Home',
+                                    name= name#,
                                    #visits=session['visits'] ------------> keep track of number of visits???????
                                    )
 
