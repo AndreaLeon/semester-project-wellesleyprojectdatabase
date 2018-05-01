@@ -69,8 +69,6 @@ def join():
 
 
 #login 
-#Question for Scott: getting error "form submission error coercing to Unicode: need string or buffer, long found" ????????????????????????????????????????????????????????????????/
-  #tried casting both passwd and hashed to str because they are the only values being encoded, but still got same error
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
@@ -132,6 +130,16 @@ def user(uid):
 # def index():
 #   return render_template('profile.html',
 #                            title='Profiles')
+
+
+@app.route('/createProject', methods=['GET', 'POST'])
+def createProject():
+  if request.method == 'POST':
+    # TO DO: check all form boxes filled
+     flash ("Project Submitted")
+  return render_template('project.html')
+
+
 
 if __name__ == '__main__':
 
