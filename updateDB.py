@@ -21,14 +21,12 @@ def checkUser(conn, email):
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	return curs.fetchone()
 
-# def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc)
-#	'''Adds project to project table
-#		by: Andrea Leon'''
-# 	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
-#     curs.execute('insert into project (creator, name, compensation, rolesOpen, \
-#     	description, duration) values (%s, %s, %s, %s, %s, %s)', [projCreator, \
-#     	projName, projDur, projComp, projRoles, projReq, projDesc])
-#     return "Project created"
+def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc):
+	'''Adds project to project table
+	 	by: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+	curs.execute('INSERT into project (creator, name, compensation, rolesOpen,requirements, description,\
+	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
@@ -58,8 +56,6 @@ def getName(conn, email):
 	curs.execute('SELECT name FROM user WHERE email = %s', [email])
 	row = curs.fetchone()
 	return row['name']
-
->>>>>>> 752342286e9998ca746e8a6a7e02675267d6b9e9
 
 
 # ================================================================
