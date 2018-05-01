@@ -21,8 +21,12 @@ import dbconn2
 #                      [username])
 #     return curs.fetchone()
 
-
-
+# def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc)
+# 	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+#     curs.execute('insert into project (creator, name, compensation, rolesOpen, \
+#     	description, duration) values (%s, %s, %s, %s, %s, %s)', [projCreator, \
+#     	projName, projDur, projComp, projRoles, projReq, projDesc])
+#     return "Project created"
 
 
 # ================================================================
