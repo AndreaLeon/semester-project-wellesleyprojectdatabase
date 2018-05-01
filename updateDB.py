@@ -15,15 +15,40 @@ import dbconn2
 #TO DO: Insert Functions Below
 
 def checkUser(conn, email):
+	'''Finds if user exists in user table based on email
+		By: Eliana Marostica'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	return curs.fetchone()
 
 def addUser(conn, email, name, role, hashed):
+	'''Adds a user to the user table
+		By: Eliana Marostica'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('INSERT into user(email,name,role,hashed) VALUES(%s,%s,%s,%s)', [email, name, role, hashed])
 
+def fetchHashed(conn, email):
+	'''Retrieves the password hash for a user based on email
+		By: Eliana Marostica'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT hashed FROM user WHERE email = %s', [email])
+	return curs.fetchone()
 
+def getUID(conn, email):
+	'''Returns user's uid from user table based on provided email
+		By: Eliana Marostica'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT uid FROM user WHERE email = %s', [email])
+	row = curs.fetchone()
+	return row['uid']
+
+def getName(conn, email):
+	'''Returns user's name from user table based on their email
+		By: Eliana Marostica'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT name FROM user WHERE email = %s', [email])
+	row = curs.fetchone()
+	return row['name']
 
 
 

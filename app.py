@@ -70,40 +70,68 @@ def join():
 
 
 #login 
+#Question for Scott: getting error "form submission error coercing to Unicode: need string or buffer, long found" ????????????????????????????????????????????????????????????????/
+  #tried casting both passwd and hashed to str because they are the only values being encoded, but still got same error
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
   if request.method == 'GET':
     return render_template('login.html')
   else:
-    return redirect( url_for('index') )
-  #   try:
-  #     email = request.form['login_email']
-  #     password = request.form['login_passwd']
-  #     flash('Login Succeded')
-  #   except Exception as e:
-  #     flash('Not a Login Attempt')
+    try:
+        email = request.form['email']
+        passwd = request.form['passwd']
+        print('passwd: ' + passwd, passwd.encode('utf-8'))
+        conn = dbconn2.connect(dsn)
+        row = updateDB.fetchHashed(conn, email)
+        if row is None:
+            # Same response as wrong password, so no information about what went wrong
+            flash('Login incorrect. Try again or join.')
+            return redirect( url_for('login'))
+        hashed = row['hashed']
+        print('hashed: ' + hashed,hashed.encode('utf-8'))
 
-  #   try:
-  #     email = request.form['join_email']
-  #     password1 = request.form['join_passwd1']
-  #     password2 = request.form['join_passwd2']
-  #     flash('Join Succeded')
-  #   except Exception as e:
-  #     flash('Not a Join Attempt')
+        print bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8'))
+        if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+            uid = updateDB.getUID(conn, email)
+            name = updateDB.getName(conn, email)
 
-    
-    # #check that login hasn't been formed yet
-    # if staffExists is not None and password == 'secret':
-    #   resp = make_response(redirect(url_for('login')))
-    #   resp.set_cookie('uid', username)                                        
-    #   flash('Login Succeeded')
-    #   return resp
-    # else:
-    #   flash('Login Failed. Please try again.')
-      
-    return redirect(url_for('login'))
+            flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+            session['uid'] = uid
+            session['logged_in'] = True
+            session['name'] = name
+            # session['visits'] = 1 ------------> keep track of number of visits???????
+            return redirect( url_for('user', uid=uid) )
+        
+        else:
+            flash('Login incorrect. Try again or join')
+            return redirect( url_for('login'))
 
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+
+#user
+@app.route('/user/<uid>')
+def user(uid):
+    try:
+        # don't trust the URL; it's only there for decoration
+        if 'uid' in session:
+            uid = session['uid']
+            name = session['name']
+            # session['visits'] = 1+int(session['visits']) ------------> keep track of number of visits???????
+            return render_template('greet.html',
+                                   page_title='My App: Welcome '+ name,
+                                   name= name#,
+                                   #visits=session['visits'] ------------> keep track of number of visits???????
+                                   )
+
+        else:
+            flash('You are not logged in. Please login or join')
+            return redirect( url_for('index') )
+    except Exception as err:
+        flash('some kind of error '+str(err))
+        return redirect( url_for('index') )
                            
 # @app.route('/profile')
 # def index():
