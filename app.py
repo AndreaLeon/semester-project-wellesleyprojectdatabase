@@ -135,7 +135,7 @@ def user(uid):
 
 @app.route('/createProject', methods=['GET', 'POST'])
 def createProject():
-  #conn = dbconn2.connect(DSN)
+  conn = dbconn2.connect(dsn)
   if request.method == 'POST':
     try: 
       projName = request.form['projectTitle']
@@ -144,9 +144,14 @@ def createProject():
       projRoles = request.form['rolesOpen']
       projReq = request.form['requirements']
       projDesc = request.form['description']
-      #addProject(conn, projCreator, projName, projDur, projComp,\
-      # projRoles, projReq, projDesc)
-      flash ("Project Submitted")
+      projCreator = 1 #hard coded until can get user info (to do in Alpha)
+      if (projName == '' or projDur == '' or projComp == '' or projRoles == ''\
+        or projReq == '' or projDesc == ''):
+        flash('Please fill out all fields.')
+      else:
+        updateDB.addProject(conn, projCreator, projName, projDur, projComp,\
+         projRoles, projReq, projDesc)
+        flash ("Project Submitted")
     except Exception as e:
       flash('Incorrectly filled, try again')
   return render_template('project.html')

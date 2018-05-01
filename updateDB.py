@@ -14,21 +14,19 @@ import dbconn2
 
 #TO DO: Insert Functions Below
 
-# def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc)
-#	'''Adds project to project table
-#		by: Andrea Leon'''
-# 	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
-#     curs.execute('insert into project (creator, name, compensation, rolesOpen, \
-#     	description, duration) values (%s, %s, %s, %s, %s, %s)', [projCreator, \
-#     	projName, projDur, projComp, projRoles, projReq, projDesc])
-#     return "Project created"
-
 def checkUser(conn, email):
 	'''Finds if user exists in user table based on email
 		By: Eliana Marostica'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	return curs.fetchone()
+
+def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc):
+	'''Adds project to project table
+	 	by: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+	curs.execute('INSERT into project (creator, name, compensation, rolesOpen,requirements, description,\
+	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
