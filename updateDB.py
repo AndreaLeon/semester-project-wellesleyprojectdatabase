@@ -70,6 +70,13 @@ def getUIDName(conn, email):
 	row = curs.fetchone()
 	return row['uid'], row['name']
 
+def getProjects(conn):
+	'''Retrieves all projects in the project table'''
+	#By: Eliana Marostica
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project')
+	return curs.fetchall()
+
 # def getName(conn, email):
 # 	'''Returns user's name from user table based on their email
 # 		By: Eliana Marostica'''

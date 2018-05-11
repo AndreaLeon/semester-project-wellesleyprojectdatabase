@@ -32,6 +32,7 @@ def index():
 
 @app.route('/join/', methods=["POST"])
 def join():
+   #case 2: user submitted a form with their name ???????????? would case 2 be in this join method?????????? Other question: how to recognize whether its a student that's logged in or administrator or what? How to show certain links only to certain people (such as administrators vs students who want to approve/browse projects)?????????
     try:
 #TODO: what if user doesn't input name, etc? What if name has numbers? ###################################
         name = request.form['name']
@@ -59,10 +60,10 @@ def join():
         session['uid'] = uid
         session['logged_in'] = True
         session['name'] = name
-        # session['visits'] = 1
 
         flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
-        return redirect( url_for('user', uid=uid) )
+        
+        return redirect( url_for('user', uid=uid) ) # ???????????????????????? how do I incorporate cookies into a redirect??????????????????
 
     except Exception as err:
         flash('form submission error '+str(err))
@@ -74,9 +75,17 @@ def join():
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
+  #flaskname = request.cookies.get('flaskname')
+  #if not flaskname:
+    #'no cookie set'
   if request.method == 'GET':
-    return render_template('login.html')
+      #case 1: first visit, just render form
+    return render_template('login.html')#, allCookies=request.cookies)
   else:
+    #print "cookie is set, so either they are continuing or logging out"
+  #if request.method == "GET":
+    #case 3: just a regular visit, show the user's info
+    #resp = make_response(render_template('greet.html')) #????? should this be render template or redirect to user url?????
     try:
         email = request.form['email']
         passwd = request.form['passwd']
@@ -95,7 +104,6 @@ def login():
             session['uid'] = uid
             session['logged_in'] = True
             session['name'] = name
-            # session['visits'] = 1 ------------> keep track of number of visits???????
             return redirect( url_for('user', uid=uid) )
         
         else:
@@ -103,8 +111,8 @@ def login():
             return redirect( url_for('login'))
 
     except Exception as err:
-        flash('form submission error '+str(err))
-        return redirect( url_for('index') )
+      flash('form submission error '+str(err))
+      return redirect( url_for('index') )
 
 #user
 @app.route('/user/<uid>')
@@ -113,11 +121,9 @@ def user(uid):
         if 'uid' in session:
             uid = session['uid']
             name = session['name']
-            # session['visits'] = 1+int(session['visits']) ------------> keep track of number of visits???????
             return render_template('greet.html',
                                     title= 'Your Home',
                                     name= name#,
-                                   #visits=session['visits'] ------------> keep track of number of visits???????
                                    )
 
         else:
@@ -197,6 +203,38 @@ def projectApproval():
                                )
       else:
         flash('Only administrators have access to this page, please login with an admin account')
+    else:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
+
+
+
+@app.route('/browseProjects/', methods=['GET'])#, 'POST'])
+def browseProjects():
+  conn = dbconn2.connect(dsn)
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'student' in roleDB['role']:
+        # if request.method == 'POST':
+        #   # flash('in post')
+        #   # selectedPIDs = request.POST.getlist('projectID')
+        #   # for pid in selectedPIDs:
+        #   #   flash(pid)
+        #   #   updateDB.approveProject(conn, uid, pid) 
+        #   #   flash("selection approved")
+        #   pass
+        # else:
+        projects = updateDB.getProjects(conn)
+        return render_template('browse.html',
+                              projects = projects
+                              )
+      else:
+        flash('Only students have access to this page, please login with a student account')
     else:
         flash('You are not logged in. Please login or join')
         return redirect( url_for('index') )

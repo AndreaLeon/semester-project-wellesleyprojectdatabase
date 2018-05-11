@@ -1,0 +1,54 @@
+<!-- Eliana Marostica
+     browse.html
+     Created 5/11/18
+     ** portions of code borrowed from projectApproval.html to match design of output
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <style scoped>
+      .selected { font-weight: bold; }
+      table {
+              border-collapse: collapse;
+      }
+      tr {
+          border: 2px solid teal;
+          padding: 2ex;
+      }
+      th{
+        border: 2px solid teal;
+      }
+      td{
+        border: 2px solid teal;
+      }
+  </style>
+  
+  <h1>Browse Projects</h1>
+
+  <table id="projectList">
+    <tr><th>Apply</th><th>Title</th><th>Creator</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th></tr>
+    {% if projects %}
+      {% for project in projects %}
+      <tr class="projectsRow">
+          <!-- <td>
+            <form class="projectApply" action="" method="POST">
+                  <input type="submit" name="projectID" value={{project.pid}}></label>
+            </form> 
+          </td> -->
+          <td></td>
+          <td>{{project.name}}</td>
+          <td>{{project.creator}}</td>    
+          <td>{{project.duration}}</td>
+          <td>{{project.compensation}}</td>
+          <td>{{project.rolesOpen}}</td>
+          <td>{{project.requirements}}</td>
+          <td>{{project.description}}</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <!-- JS code would go here -->
+{% endblock %}    
