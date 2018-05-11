@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block main_content %}
+{% block content %}
 
-<!-- <p>You have visited {{visits}} times.</p> -->
+<h2>Welcome Home, {{name}}<h2>
 
-<!-- <form id="logoutform" action="{{url_for('logout')}}">
-    <button type="submit">logout</button>
-</form> -->
+<form id="logoutform" action="{{url_for('logout')}}">
+    <button type="submit">Logout</button>
+</form> 
 
 
 {% endblock %}

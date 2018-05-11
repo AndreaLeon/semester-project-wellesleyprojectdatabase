@@ -32,7 +32,6 @@ def index():
 
 @app.route('/join/', methods=["POST"])
 def join():
-   #case 2: user submitted a form with their name ???????????? would case 2 be in this join method?????????? Other question: how to recognize whether its a student that's logged in or administrator or what? How to show certain links only to certain people (such as administrators vs students who want to approve/browse projects)?????????
     try:
 #TODO: what if user doesn't input name, etc? What if name has numbers? ###################################
         name = request.form['name']
@@ -61,7 +60,7 @@ def join():
         session['logged_in'] = True
         session['name'] = name
 
-        flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+        flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
         
         return redirect( url_for('user', uid=uid) ) # ???????????????????????? how do I incorporate cookies into a redirect??????????????????
 
@@ -75,18 +74,16 @@ def join():
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
-  #flaskname = request.cookies.get('flaskname')
-  #if not flaskname:
-    #'no cookie set'
-  if request.method == 'GET':
+  flaskuid = request.cookies.get('flaskuid')
+  
+  if not flaskuid:
+    print 'no cookie set'
+    if request.method == 'GET':
       #case 1: first visit, just render form
-    return render_template('login.html')#, allCookies=request.cookies)
-  else:
-    #print "cookie is set, so either they are continuing or logging out"
-  #if request.method == "GET":
-    #case 3: just a regular visit, show the user's info
-    #resp = make_response(render_template('greet.html')) #????? should this be render template or redirect to user url?????
-    try:
+      return render_template('login.html', allCookies=request.cookies)
+    else:
+      #case 2: user submitted a form with their name ???????????? Other question: how to recognize whether its a student that's logged in or administrator or what? How to show certain links only to certain people (such as administrators vs students who want to approve/browse projects)?????????
+      try:
         email = request.form['email']
         passwd = request.form['passwd']
         row = updateDB.fetchHashed(conn, email)
@@ -100,39 +97,80 @@ def login():
             uid = updateDB.getUIDName(conn, email)[0]
             name = updateDB.getUIDName(conn, email)[1]
 
-            flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
             session['uid'] = uid
             session['logged_in'] = True
             session['name'] = name
-            return redirect( url_for('user', uid=uid) )
+
+            resp = make_response(redirect( url_for('user', uid=uid) ))
+            resp.set_cookie('flaskuid', str(uid))
+            resp.set_cookie('flaskname', name)
+
+            flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+
+            return resp
         
         else:
             flash('Login incorrect. Try again or join')
             return redirect( url_for('login'))
 
-    except Exception as err:
-      flash('form submission error '+str(err))
-      return redirect( url_for('index') )
+      except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+  else:
+    print "cookie is set, so either they are continuing or logging out"
+    #case 3: just a regular visit, show the user's info
+    return redirect(url_for('user', uid=request.cookies.get('flaskuid')))
+          
 
 #user
 @app.route('/user/<uid>')
 def user(uid):
-    try:
-        if 'uid' in session:
-            uid = session['uid']
-            name = session['name']
-            return render_template('greet.html',
-                                    title= 'Your Home',
-                                    name= name#,
-                                   )
+  try:
+      if 'uid' in session:
+        uid = session['uid']
+        name = session['name']
+        return render_template('greet.html',
+                                name= name,
+                                allCookies=request.cookies
+                               )
+      elif request.cookies.get('flaskuid'):
+        return render_template('greet.html',
+                                name= request.cookies.get('flaskname'),
+                                allCookies=request.cookies
+                               )
 
-        else:
-            flash('You are not logged in. Please login or join')
-            return redirect( url_for('index') )
-    except Exception as err:
-        flash('some kind of error '+str(err))
-        return redirect( url_for('index') )
+      else:
+          flash('You are not logged in. Please login or join')
+          return redirect( url_for('index') )
+  except Exception as err:
+      flash('some kind of error '+str(err))
+      return redirect( url_for('index') )
                            
+@app.route('/logout/')
+def logout():
+#case 4: user wants to delete the cookies, i.e. logout
+  try:
+    if request.cookies.get('flaskuid'):
+      if 'uid' in session:
+        username = session['uid']
+        session.pop('uid')
+        session.pop('name')
+        session.pop('logged_in')
+
+      resp = make_response(redirect(url_for('index')))
+      resp.set_cookie('flaskuid','',expires=0)
+      resp.set_cookie('flaskname','',expires=0)
+
+      flash('You are logged out. Thank you for visiting!')
+      return resp
+    else:
+      flash('You are not logged in. Please login or join')
+      return redirect( url_for('index') )
+  except Exception as err:
+    flash('some kind of error '+str(err))
+    return redirect( url_for('index') )
+
+
 @app.route('/createProfile',  methods=['GET', 'POST'])
 def createProfile():
   conn = dbconn2.connect(dsn)
