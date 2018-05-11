@@ -237,10 +237,9 @@ def browseProjects():
         flash('Only students have access to this page, please login with a student account')
     else:
         flash('You are not logged in. Please login or join')
-        return redirect( url_for('index') )
   except Exception as e:
     flash(e)
-    return redirect( url_for('index') )
+  return redirect( url_for('index') )
 
 
 if __name__ == '__main__':
