@@ -33,16 +33,23 @@ def index():
 @app.route('/join/', methods=["POST"])
 def join():
     try:
-#TODO: what if user doesn't input name, etc? What if name has numbers? ###################################
         name = request.form['name']
         email = request.form['email']
         passwd1 = request.form['passwd1']
         passwd2 = request.form['passwd2']
         rolelist = request.form.getlist('role')
         role = ','.join(rolelist)
+
+        #check that each field has been filled out
+        if not name or not email or not passwd1 or not passwd2 or not rolelist:
+          flash('Please make sure each field has been filled.')
+          return redirect(url_for('login'))
+
+        #check that passwords match
         if passwd1 != passwd2:
             flash('Passwords do not match')
             return redirect(url_for('login'))
+        
         hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
         conn = dbconn2.connect(dsn)
 
@@ -65,7 +72,7 @@ def join():
         return redirect( url_for('user', uid=uid) ) # ???????????????????????? how do I incorporate cookies into a redirect??????????????????
 
     except Exception as err:
-        flash('form submission error '+str(err))
+        flash('Form submission error '+str(err))
         return redirect( url_for('index') )
 
 
