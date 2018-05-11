@@ -43,6 +43,12 @@ def getUnapprovedProjects(conn):
 	 duration FROM project WHERE approver is NULL')
 	return curs.fetchall()
 
+def approveProject(conn, uid, pid):
+  '''Finds user role in user table based on uid
+      By: Andrea Leon'''
+  curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+  curs.execute('UPDATE project SET approver = %s WHERE pid = %s', [uid, pid])
+
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
 		By: Eliana Marostica'''
