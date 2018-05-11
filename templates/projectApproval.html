@@ -26,10 +26,15 @@
   <h1>Approve Projects</h1>
 
   <table id="projectList">
-    <tr><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
+    <tr><th>Approve</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
     {% if projects %}
       {% for project in projects %}
       <tr class="projectsRow">
+          <td>
+            <form class="projectChoose" action="" method="POST">
+                  <input type="radio" name="projectID" value={{project.pid}}></label>
+            </form> 
+          </td>
           <td>{{project.name}}</td>
           <td>{{project.duration}}</td>
           <td>{{project.compensation}}</td>
@@ -40,6 +45,8 @@
       </tr>
       {% endfor %}
     {% endif %}
+    
+    <input type="submit" value="Approve Selected Projects">
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
