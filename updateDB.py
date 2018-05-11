@@ -21,12 +21,27 @@ def checkUser(conn, email):
 	curs.execute('SELECT email FROM user WHERE email = %s', [email])
 	return curs.fetchone()
 
+def checkUserRole(conn, uid):
+	'''Finds user role in user table based on uid
+		By: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT role FROM user WHERE uid = %s', [uid])
+	return curs.fetchone()
+
 def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projReq, projDesc):
 	'''Adds project to project table
 	 	by: Andrea Leon'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
-	curs.execute('INSERT into project (creator, name, compensation, rolesOpen,requirements, description,\
+	curs.execute('INSERT into project (creator, name, compensation, rolesOpen, requirements, description,\
 	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
+
+def getUnapprovedProjects(conn):
+	'''Finds user role in user table based on uid
+		By: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT creator, approver, name, compensation, rolesOpen,requirements, description,\
+	 duration FROM project WHERE approver is NULL')
+	return curs.fetchall()
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
