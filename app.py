@@ -175,7 +175,28 @@ def createProject():
   return render_template('project.html')
 
 
-
+@app.route('/projectApproval', methods=['POST', 'GET'])
+def projectApproval():
+  conn = dbconn2.connect(dsn)
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      flash(roleDB)
+      if roleDB:
+        projects = updateDB.getUnapprovedProjects(conn)
+        flash(projects)
+        return render_template('projectApproval.html',
+                              projects = projects
+                             )
+      else:
+        flash('Only administrators have access to this page, please login with an admin account')
+    else:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
 
 
 if __name__ == '__main__':

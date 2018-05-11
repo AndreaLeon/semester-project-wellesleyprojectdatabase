@@ -1,0 +1,47 @@
+<!-- Andrea Leon
+     project.html
+     Created 4/29/18
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <style scoped>
+      .selected { font-weight: bold; }
+      table {
+              border-collapse: collapse;
+      }
+      tr {
+          border: 2px solid teal;
+          padding: 2ex;
+      }
+      th{
+        border: 2px solid teal;
+      }
+      td{
+        border: 2px solid teal;
+      }
+  </style>
+  
+  <h1>Approve Projects</h1>
+
+  <table id="projectList">
+    <tr><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
+    {% if projects %}
+      {% for project in projects %}
+      <tr class="projectsRow">
+          <td>{{project.name}}</td>
+          <td>{{project.duration}}</td>
+          <td>{{project.compensation}}</td>
+          <td>{{project.rolesOpen}}</td>
+          <td>{{project.requirements}}</td>
+          <td>{{project.description}}</td>
+          <td>{{project.creator}}</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    
+    <!-- JS code would go here -->
+{% endblock %}    
