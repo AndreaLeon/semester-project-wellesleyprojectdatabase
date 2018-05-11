@@ -54,7 +54,7 @@ def join():
         
         #insert new user into user table
         updateDB.addUser(conn, email, name, role, hashed)
-        uid = updateDB.getUID(conn, email)
+        uid = updateDB.getUIDName(conn, email)[0]
 
         session['uid'] = uid
         session['logged_in'] = True
@@ -88,8 +88,8 @@ def login():
         hashed = row['hashed']
 
         if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
-            uid = updateDB.getUID(conn, email)
-            name = updateDB.getName(conn, email)
+            uid = updateDB.getUIDName(conn, email)[0]
+            name = updateDB.getUIDName(conn, email)[1]
 
             flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
             session['uid'] = uid
