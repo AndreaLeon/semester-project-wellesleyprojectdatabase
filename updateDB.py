@@ -86,7 +86,6 @@ def getProjects(conn):
 # 	return row['name']
 
 def updateUser(conn, major, prog_languages, courses, research_exp, internship_exp, bg_info, uid):
-
 	'''Updates the user table to add the information input by the
 	user on the profile.html page
 		By: Parul Koul'''
@@ -94,6 +93,14 @@ def updateUser(conn, major, prog_languages, courses, research_exp, internship_ex
 	curs.execute('UPDATE user SET major = %s, programming_languages = %s, courses = %s, \
 	research_experience = %s, internship_experience = %s, background_info = %s WHERE uid = %s;', 
 	[major, prog_languages, courses, research_exp, internship_exp, bg_info, uid])
+
+def applyToProject(conn, uid, pid):
+	'''Updates the application table with new applications. Each application
+	consists of a users uid taken from the session and the pid of the project.
+		By: Parul Koul'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('INSERT INTO application (uid, pid) VALUES (%s, %s);', [uid, pid])
+
 
 
 # ================================================================
