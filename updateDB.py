@@ -107,6 +107,18 @@ def applyToProject(conn, uid, pid):
 	else:
 		return None
 
+def getApplicationsPerClient(conn, uid):
+	'''Gets all the applications associated with all projects associated with a
+	particular client
+		By: Parul Koul '''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT application.uid, application.pid, project.creator FROM \
+	(application INNER JOIN project ON application.pid = project.pid) WHERE project.creator = %s;', [uid,])
+	applications = curs.fetchall()
+	return applications	
+
+
+
 
 
 # ================================================================

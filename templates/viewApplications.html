@@ -1,0 +1,56 @@
+<!-- Parul Koul
+    viewApplications.html
+    Created 5/12/18
+    Skeleton of code taken from projectApproval.html
+    to maintain consistency in table display
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <style scoped>
+      .selected { font-weight: bold; }
+      table {
+              border-collapse: collapse;
+      }
+      tr {
+          border: 2px solid teal;
+          padding: 2ex;
+      }
+      th{
+        border: 2px solid teal;
+      }
+      td{
+        border: 2px solid teal;
+      }
+  </style>
+  
+  <h1>View Applications</h1>
+
+  <!-- <table id="projectList">
+    <tr><th>Approve</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
+    {% if projects %}
+      {% for project in projects %}
+      <tr class="projectsRow">
+          <td>
+            <form class="projectChoose" action="" method="POST">
+                  <input type="radio" name="projectID" value={{project.pid}}></label>
+            </form> 
+          </td>
+          <td>{{project.name}}</td>
+          <td>{{project.duration}}</td>
+          <td>{{project.compensation}}</td>
+          <td>{{project.rolesOpen}}</td>
+          <td>{{project.requirements}}</td>
+          <td>{{project.description}}</td>
+          <td>{{project.creator}}</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+    
+    <input type="submit" value="Approve Selected Projects">
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    
+    <!-- JS code would go here -->
+{% endblock %}    

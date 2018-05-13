@@ -294,6 +294,25 @@ def browseProjects():
     flash(e)
   return redirect( url_for('index') )
 
+@app.route('/viewApplications/', methods=['GET', 'POST'])
+def viewApplications():
+  conn = dbconn2.connect(dsn)
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'client' in roleDB['role']:
+        # if request.method == 'POST':
+        #   pass
+        return render_template('viewApplications.html')
+      else:
+        flash('Only clients have access to this page, please login with a client account')
+    else:
+        flash('You are not logged in. Please login or join')
+  except Exception as e:
+    flash(e)
+  return redirect( url_for('index') )
+
 
 if __name__ == '__main__':
 
