@@ -33,7 +33,7 @@ def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projRe
 	 	by: Andrea Leon'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
 	curs.execute('INSERT into project (creator, name, compensation, rolesOpen, requirements, description,\
-	 duration) VALUES (1, %s, %s, %s, %s, %s, %s)', [projName, projComp, projRoles, projReq, projDesc, projDur])
+	 duration) VALUES (%s, %s, %s, %s, %s, %s, %s)', [projCreator, projName, projComp, projRoles, projReq, projDesc, projDur])
 
 def getUnapprovedProjects(conn):
 	'''Finds user role in user table based on uid
@@ -113,7 +113,7 @@ def getApplicationsPerClient(conn, uid):
 		By: Parul Koul '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT application.uid, application.pid, project.creator FROM \
-	(application INNER JOIN project ON application.pid = project.pid) WHERE project.creator = %s;', [uid,])
+	(application INNER JOIN project ON application.pid = project.pid) WHERE project.creator = %s;', [uid])
 	applications = curs.fetchall()
 	return applications	
 

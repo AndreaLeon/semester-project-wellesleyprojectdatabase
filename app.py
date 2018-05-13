@@ -1,4 +1,4 @@
-# Andrea Leon, Eliana Marostica, and Parul Kohl
+# Andrea Leon, Eliana Marostica, and Parul Koul
 # CS304 Final Project: Wellesley Project Database
 # app.py 
 # created 4/28/2018
@@ -206,21 +206,29 @@ def createProfile():
 def createProject():
   conn = dbconn2.connect(dsn)
   if request.method == 'POST':
-    try: 
-      projName = request.form['projectTitle']
-      projDur = request.form['duration']
-      projComp = request.form['compensation']
-      projRoles = request.form['rolesOpen']
-      projReq = request.form['requirements']
-      projDesc = request.form['description']
-      projCreator = 1 #hard coded until can get user info (to do in Alpha)
-      if (projName == '' or projDur == '' or projComp == '' or projRoles == ''\
-        or projReq == '' or projDesc == ''):
-        flash('Please fill out all fields.')
+    try:
+      if 'uid' in session:
+        uid = session['uid']
+        roleDB = updateDB.checkUserRole(conn, uid)
+        if 'client' in roleDB['role']: 
+          projName = request.form['projectTitle']
+          projDur = request.form['duration']
+          projComp = request.form['compensation']
+          projRoles = request.form['rolesOpen']
+          projReq = request.form['requirements']
+          projDesc = request.form['description']
+          projCreator = uid #TODO: hard coded until can get user info (to do in Alpha)
+          if (projName == '' or projDur == '' or projComp == '' or projRoles == ''\
+            or projReq == '' or projDesc == ''):
+            flash('Please fill out all fields.')
+          else:
+            updateDB.addProject(conn, projCreator, projName, projDur, projComp,\
+            projRoles, projReq, projDesc)
+            flash ("Project Submitted")
+        else:
+          flash('Only clients have access to this page, please login with a client account')
       else:
-        updateDB.addProject(conn, projCreator, projName, projDur, projComp,\
-         projRoles, projReq, projDesc)
-        flash ("Project Submitted")
+        flash('You are not logged in. Please login or join')
     except Exception as e:
       flash('Incorrectly filled, try again')
   return render_template('project.html')
@@ -302,9 +310,11 @@ def viewApplications():
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
       if 'client' in roleDB['role']:
+        applications = updateDB.getApplicationsPerClient(conn, uid)
+        print(applications)
         # if request.method == 'POST':
         #   pass
-        return render_template('viewApplications.html')
+        return render_template('viewApplications.html', applications=applications)
       else:
         flash('Only clients have access to this page, please login with a client account')
     else:

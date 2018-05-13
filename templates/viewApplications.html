@@ -27,30 +27,17 @@
   
   <h1>View Applications</h1>
 
-  <!-- <table id="projectList">
-    <tr><th>Approve</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
-    {% if projects %}
-      {% for project in projects %}
-      <tr class="projectsRow">
-          <td>
-            <form class="projectChoose" action="" method="POST">
-                  <input type="radio" name="projectID" value={{project.pid}}></label>
-            </form> 
-          </td>
-          <td>{{project.name}}</td>
-          <td>{{project.duration}}</td>
-          <td>{{project.compensation}}</td>
-          <td>{{project.rolesOpen}}</td>
-          <td>{{project.requirements}}</td>
-          <td>{{project.description}}</td>
-          <td>{{project.creator}}</td>
+  <table id="applicationList">
+    <tr><th>Project ID</th><th>Applicant ID</th></tr>
+    {% if applications %}
+      {% for application in applications %}
+      <tr class="applicationsRow">
+          <td>{{application.pid}}</td>
+          <td>{{application.uid}}</td>
       </tr>
       {% endfor %}
     {% endif %}
     
-    <input type="submit" value="Approve Selected Projects">
-
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script> 
     
-    <!-- JS code would go here -->
 {% endblock %}    
