@@ -83,8 +83,6 @@ def login():
   conn = dbconn2.connect(dsn)
   flaskemail = request.cookies.get('flaskemail')
   
-  # if not flaskuid:
-  #   print('no cookie set')
   if request.method == 'GET':
     if 'uid' in session:
       return redirect(url_for('user', uid=session['uid']))
@@ -92,17 +90,6 @@ def login():
       return render_template('login.html',
                               email=flaskemail if flaskemail else "",
                               allCookies=request.cookies)
-
-    # if not flaskemail:
-    #   print 'no cookie set'
-    # #case 1: first visit, just render form
-    #   return render_template('login.html', allCookies=request.cookies)
-    # else:
-    #   print 'cookie is set'
-    # #case 3: just a regular visit, "remember" user by putting their email as default text
-    #   return render_template('login.html',
-    #                           email=flaskemail,
-    #                           allCookies=request.cookies)
   else:
     #case 2: user submitted a form with their name 
     try:
@@ -125,8 +112,6 @@ def login():
 
           resp = make_response(redirect( url_for('user', uid=uid) ))
           resp.set_cookie('flaskemail', email)
-          #resp.set_cookie('flaskuid', str(uid))
-          #resp.set_cookie('flaskname', name)
 
           flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
 
@@ -139,11 +124,7 @@ def login():
     except Exception as err:
       flash('form submission error '+str(err))
       return redirect( url_for('index') )
-  # else:
-  #   print "cookie is set, so either they are continuing or logging out"
-  #   #case 3: just a regular visit, show the user's info
-  #   return redirect(url_for('user', uid=request.cookies.get('flaskuid')))
-          
+
 
 #user
 @app.route('/user/<uid>')
