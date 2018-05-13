@@ -146,7 +146,6 @@ def user(uid):
                            
 @app.route('/logout/')
 def logout():
-#case 4: user wants to delete the cookies, i.e. logout
   try:
     if 'uid' in session:
       username = session['uid']
