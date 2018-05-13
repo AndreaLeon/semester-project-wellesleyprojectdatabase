@@ -69,7 +69,7 @@ def join():
 
         flash(('Successfully joined as {}, user number {}, with email {}').format(name,uid,email))
         
-        return redirect( url_for('user', uid=uid) ) # ???????????????????????? how do I incorporate cookies into a redirect??????????????????
+        return redirect( url_for('user', uid=uid) )
 
     except Exception as err:
         flash('Form submission error '+str(err))
@@ -81,52 +81,68 @@ def join():
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
-  flaskuid = request.cookies.get('flaskuid')
+  flaskemail = request.cookies.get('flaskemail')
   
-  if not flaskuid:
-    print('no cookie set')
-    if request.method == 'GET':
-      #case 1: first visit, just render form
-      return render_template('login.html', allCookies=request.cookies)
+  # if not flaskuid:
+  #   print('no cookie set')
+  if request.method == 'GET':
+    if 'uid' in session:
+      return redirect(url_for('user', uid=session['uid']))
     else:
-      #case 2: user submitted a form with their name ???????????? Other question: how to recognize whether its a student that's logged in or administrator or what? How to show certain links only to certain people (such as administrators vs students who want to approve/browse projects)?????????
-      try:
-        email = request.form['email']
-        passwd = request.form['passwd']
-        row = updateDB.fetchHashed(conn, email)
-        if row is None:
-            # Same response as wrong password, so no information about what went wrong
-            flash('Login incorrect. Try again or join.')
-            return redirect( url_for('login'))
-        hashed = row['hashed']
+      return render_template('login.html',
+                              email=flaskemail if flaskemail else "",
+                              allCookies=request.cookies)
 
-        if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
-            uid = updateDB.getUIDName(conn, email)[0]
-            name = updateDB.getUIDName(conn, email)[1]
-
-            session['uid'] = uid
-            session['logged_in'] = True
-            session['name'] = name
-
-            resp = make_response(redirect( url_for('user', uid=uid) ))
-            resp.set_cookie('flaskuid', str(uid))
-            resp.set_cookie('flaskname', name)
-
-            flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
-
-            return resp
-        
-        else:
-            flash('Login incorrect. Try again or join')
-            return redirect( url_for('login'))
-
-      except Exception as err:
-        flash('form submission error '+str(err))
-        return redirect( url_for('index') )
+    # if not flaskemail:
+    #   print 'no cookie set'
+    # #case 1: first visit, just render form
+    #   return render_template('login.html', allCookies=request.cookies)
+    # else:
+    #   print 'cookie is set'
+    # #case 3: just a regular visit, "remember" user by putting their email as default text
+    #   return render_template('login.html',
+    #                           email=flaskemail,
+    #                           allCookies=request.cookies)
   else:
-    print "cookie is set, so either they are continuing or logging out"
-    #case 3: just a regular visit, show the user's info
-    return redirect(url_for('user', uid=request.cookies.get('flaskuid')))
+    #case 2: user submitted a form with their name 
+    try:
+      email = request.form['email']
+      passwd = request.form['passwd']
+      row = updateDB.fetchHashed(conn, email)
+      if row is None:
+          # Same response as wrong password, so no information about what went wrong
+          flash('Login incorrect. Try again or join.')
+          return redirect( url_for('login'))
+      hashed = row['hashed']
+
+      if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+          uid = updateDB.getUIDName(conn, email)[0]
+          name = updateDB.getUIDName(conn, email)[1]
+
+          session['uid'] = uid
+          session['logged_in'] = True
+          session['name'] = name
+
+          resp = make_response(redirect( url_for('user', uid=uid) ))
+          resp.set_cookie('flaskemail', email)
+          #resp.set_cookie('flaskuid', str(uid))
+          #resp.set_cookie('flaskname', name)
+
+          flash(('Successfully logged in as {}, user number {}, with email {}').format(name,uid,email))
+
+          return resp
+      
+      else:
+          flash('Login incorrect. Try again or join')
+          return redirect( url_for('login'))
+
+    except Exception as err:
+      flash('form submission error '+str(err))
+      return redirect( url_for('index') )
+  # else:
+  #   print "cookie is set, so either they are continuing or logging out"
+  #   #case 3: just a regular visit, show the user's info
+  #   return redirect(url_for('user', uid=request.cookies.get('flaskuid')))
           
 
 #user
@@ -137,18 +153,12 @@ def user(uid):
         uid = session['uid']
         name = session['name']
         return render_template('greet.html',
-                                name= name,
+                                name=name,
                                 allCookies=request.cookies
                                )
-      elif request.cookies.get('flaskuid'):
-        return render_template('greet.html',
-                                name= request.cookies.get('flaskname'),
-                                allCookies=request.cookies
-                               )
-
       else:
           flash('You are not logged in. Please login or join')
-          return redirect( url_for('index') )
+          return redirect( url_for('login') )
   except Exception as err:
       flash('some kind of error '+str(err))
       return redirect( url_for('index') )
@@ -157,12 +167,11 @@ def user(uid):
 def logout():
 #case 4: user wants to delete the cookies, i.e. logout
   try:
-    if request.cookies.get('flaskuid'):
-      if 'uid' in session:
-        username = session['uid']
-        session.pop('uid')
-        session.pop('name')
-        session.pop('logged_in')
+    if 'uid' in session:
+      username = session['uid']
+      session.pop('uid')
+      session.pop('name')
+      session.pop('logged_in')
 
       resp = make_response(redirect(url_for('index')))
       resp.set_cookie('flaskuid','',expires=0)
