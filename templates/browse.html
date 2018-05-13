@@ -26,19 +26,17 @@
   
   <h1>Browse Projects</h1>
   <h4> Apply to a project by clicking the button with the number in the column labelled "Apply"</h4>
-  <table id="projectList">
-    <tr><th>Apply</th><th>Title</th><th>Creator</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th></tr>
+  <table class="uk-table" id="projectList">
+    <tr><th>Apply</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th></tr>
     {% if projects %}
       {% for project in projects %}
       <tr class="projectsRow">
            <td>
             <form class="projectApply" action="" method="POST">
-                  <input type="submit" name="projectID" value={{project.pid}}></label>
+                  <button class="uk-button" type="submit" name="projectID" value={{project.pid}}>Apply</button></label>
             </form> 
           </td> 
-          <td></td>
-          <td>{{project.name}}</td>
-          <td>{{project.creator}}</td>    
+          <td>{{project.name}}</td> 
           <td>{{project.duration}}</td>
           <td>{{project.compensation}}</td>
           <td>{{project.rolesOpen}}</td>

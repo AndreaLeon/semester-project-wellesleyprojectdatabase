@@ -12,7 +12,7 @@
   <form id="loginform" method="post" action="/login/">
       <p><label for="email">Email: <input type="text" name="email"></label></p>
       <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
-      <p><button type="submit">Login</button></p>
+      <p><button class="uk-button" type="submit">Login</button></p>
   </form>
   
 
@@ -24,12 +24,12 @@
       <p><label for="passwd1">Password: <input type="password" name="passwd1"></label></p>
       <p><label for="passwd2">Re-Type Password: <input type="password" name="passwd2"></label></p>
       <p><label for="role">Select Your Role(s):<br> 
-          <input type="checkbox" name="role" value="student"><label for="role">Student<br>
-          <input type="checkbox" name="role" value="client"><label for="role">Client<br>
-          <input type="checkbox" name="role" value="administrator"><label for="role">Administrator<br>
+          <input class="uk-checkbox" type="checkbox" name="role" value="student"><label for="role">Student<br>
+          <input class="uk-checkbox" type="checkbox" name="role" value="client"><label for="role">Client<br>
+          <input class="uk-checkbox" type="checkbox" name="role" value="administrator"><label for="role">Administrator<br>
 
       <!--TO DO: implement Ajax to test if passwords match -->
-      <p><button type="submit">Join</button></p>
+      <p><button class="uk-button" type="submit">Join</button></p>
   </form>
 
 
