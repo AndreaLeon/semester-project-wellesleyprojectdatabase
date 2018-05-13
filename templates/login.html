@@ -7,30 +7,32 @@
 {% block content %}
 
   <!-- login page includes forms for both logging in and joining -->
-  <h2>Login</h2>
+  <center>
+    <h2>Login</h2>
 
-  <form id="loginform" method="post" action="/login/">
-      <p><label for="email">Email: <input type="text" name="email" value={{email}}></label></p>
-      <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
-      <p><button class="uk-button" type="submit">Login</button></p>
-  </form>
-  
+    <form id="loginform" method="post" action="/login/">
+        <p><label for="email">Email: <input type="text" name="email" value={{email}}></label></p>
+        <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
+        <p><button class="uk-button" type="submit">Login</button></p>
+    </form>
+    
 
-  <h2>New to WPDB? Join Below</h2>
+    <h2>New to WPDB? Join Below</h2>
 
-  <form id="joinform" method="post" action="/join/">
-      <p><label for="name">Name: <input type="text" name="name"></label></p>
-      <p><label for="email">Email: <input type="text" name="email"></label></p>
-      <p><label for="passwd1">Password: <input type="password" name="passwd1"></label></p>
-      <p><label for="passwd2">Re-Type Password: <input type="password" name="passwd2"></label></p>
-      <p><label for="role">Select Your Role(s):<br> 
-          <input class="uk-checkbox" type="checkbox" name="role" value="student"><label for="role">Student<br>
-          <input class="uk-checkbox" type="checkbox" name="role" value="client"><label for="role">Client<br>
-          <input class="uk-checkbox" type="checkbox" name="role" value="administrator"><label for="role">Administrator<br>
+    <form id="joinform" method="post" action="/join/">
+        <p><label for="name">Name: <input type="text" name="name"></label></p>
+        <p><label for="email">Email: <input type="text" name="email"></label></p>
+        <p><label for="passwd1">Password: <input type="password" name="passwd1"></label></p>
+        <p><label for="passwd2">Re-Type Password: <input type="password" name="passwd2"></label></p>
+        <p><label for="role">Select Your Role(s):</label><br> 
+            <input class="uk-checkbox" type="checkbox" name="role" value="student"><label for="role">Student</label><br>
+            <input class="uk-checkbox" type="checkbox" name="role" value="client"><label for="role">Client</label><br>
+            <input class="uk-checkbox" type="checkbox" name="role" value="administrator"><label for="role">Administrator</label><br>
 
-      <!--TO DO: implement Ajax to test if passwords match -->
-      <p><button class="uk-button" type="submit">Join</button></p>
-  </form>
+        <!--TO DO: implement Ajax to test if passwords match -->
+        <p><button class="uk-button" type="submit">Join</button></p>
+    </form>
+  </center>
 
 
 
