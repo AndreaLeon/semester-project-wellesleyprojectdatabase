@@ -84,7 +84,7 @@ def login():
   flaskuid = request.cookies.get('flaskuid')
   
   if not flaskuid:
-    print 'no cookie set'
+    print('no cookie set')
     if request.method == 'GET':
       #case 1: first visit, just render form
       return render_template('login.html', allCookies=request.cookies)
@@ -257,7 +257,7 @@ def projectApproval():
 
 
 
-@app.route('/browseProjects/', methods=['GET'])#, 'POST'])
+@app.route('/browseProjects/', methods=['GET', 'POST'])
 def browseProjects():
   conn = dbconn2.connect(dsn)
   try:
@@ -265,16 +265,24 @@ def browseProjects():
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
       if 'student' in roleDB['role']:
-        # if request.method == 'POST':
-        #   # flash('in post')
-        #   # selectedPIDs = request.POST.getlist('projectID')
-        #   # for pid in selectedPIDs:
-        #   #   flash(pid)
-        #   #   updateDB.approveProject(conn, uid, pid) 
-        #   #   flash("selection approved")
-        #   pass
-        # else:
-        projects = updateDB.getProjects(conn)
+        if request.method == 'POST':
+          # flash('in post')
+          # selectedPIDs = request.POST.getlist('projectID')
+          # for pid in selectedPIDs:
+          #   flash(pid)
+          #   # updateDB.approveProject(conn, uid, pid) 
+          #   updateDB.applyToProject(conn, uid, pid)
+          #   flash("selection approved")
+          # # pass
+          pid = request.form['projectID']
+          result = updateDB.applyToProject(conn, uid, pid)
+          if result == None:
+            flash('You have already applied to project ' + pid + '. You cannot apply to a project twice. ')
+          else:
+            flash('You have successfully applied to project  number ' + pid)
+          projects = updateDB.getProjects(conn)
+        else:
+          projects = updateDB.getProjects(conn)
         return render_template('browse.html',
                               projects = projects
                               )

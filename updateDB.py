@@ -74,7 +74,7 @@ def getProjects(conn):
 	'''Retrieves all projects in the project table'''
 	#By: Eliana Marostica
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project')
+	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project')
 	return curs.fetchall()
 
 # def getName(conn, email):
@@ -99,7 +99,13 @@ def applyToProject(conn, uid, pid):
 	consists of a users uid taken from the session and the pid of the project.
 		By: Parul Koul'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('INSERT INTO application (uid, pid) VALUES (%s, %s);', [uid, pid])
+	curs.execute('SELECT * FROM application WHERE uid=%s AND pid=%s;', [uid, pid])
+	result = curs.fetchall()
+	if len(result) == 0:
+		curs.execute('INSERT INTO application (uid, pid) VALUES (%s, %s);', [uid, pid])
+		return pid
+	else:
+		return None
 
 
 
