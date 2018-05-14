@@ -21,6 +21,9 @@
       td{
         border: 2px solid teal;
       }
+      body{
+        margin: 10px;
+      }
   </style>
   
   <h1>Approve Projects</h1>
@@ -46,9 +49,11 @@
       {% endfor %}
     {% endif %}
     
-    <input class="uk-button" type="submit" value="Approve Selected Projects">
+<!--     <input class="uk-button" type="submit" method="POST" value="approve selected projects" style="border: 2px solid teal; background-color: teal; color: white;"> -->
+    <button type="button" formmethod="POST" form="projectChoose" style="border: 2px solid teal; background-color: teal; color: white;">APPROVE SELECTED PROJECTS</button>
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <!-- JS code would go here -->
+    
 {% endblock %}    
