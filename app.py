@@ -181,36 +181,45 @@ def logout():
 @app.route('/createProfile',  methods=['GET', 'POST'])
 def createProfile():
   conn = dbconn2.connect(dsn)
-  if request.method == 'POST':
-    try: 
-      if 'uid' in session:
-        uid = session['uid']
-        major = request.form['major']
-        prog_languages = request.form['prog_languages']
-        courses = request.form['courses']
-        research_exp = request.form['research_exp']
-        internship_exp = request.form['internship_exp']
-        bg_info = request.form['bg_info']
-        updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
-        internship_exp, bg_info, uid)
-        flash ("Profile Update Submitted")
+  try: 
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'student' in roleDB['role']: 
+        if request.method == 'POST':
+          major = request.form['major']
+          prog_languages = request.form['prog_languages']
+          courses = request.form['courses']
+          research_exp = request.form['research_exp']
+          internship_exp = request.form['internship_exp']
+          bg_info = request.form['bg_info']
+          updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
+          internship_exp, bg_info, uid)
+          flash ("Profile Update Submitted")
+          return render_template('profile.html')
+        else:
+          return render_template('profile.html')
       else:
-        flash("You have to be logged in to access this page.")
-    except Exception as e:
-      flash(e)
-      flash('Incorrectly filled, try again')
-  return render_template('profile.html')
+          flash('Only students have access to this page, please login with a student account')
+          return redirect( url_for('index') )
+    else:
+      flash('You are not logged in. Please login or join')
+      return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    flash('Incorrectly filled, try again')
+    return redirect( url_for('index') )
 
 
 @app.route('/createProject', methods=['GET', 'POST'])
 def createProject():
   conn = dbconn2.connect(dsn)
-  if request.method == 'POST':
-    try:
-      if 'uid' in session:
-        uid = session['uid']
-        roleDB = updateDB.checkUserRole(conn, uid)
-        if 'client' in roleDB['role']: 
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'client' in roleDB['role']: 
+        if request.method == 'POST':
           projName = request.form['projectTitle']
           projDur = request.form['duration']
           projComp = request.form['compensation']
@@ -225,13 +234,18 @@ def createProject():
             updateDB.addProject(conn, projCreator, projName, projDur, projComp,\
             projRoles, projReq, projDesc)
             flash ("Project Submitted")
+            return render_template('project.html')
         else:
-          flash('Only clients have access to this page, please login with a client account')
+          return render_template('project.html') 
       else:
-        flash('You are not logged in. Please login or join')
-    except Exception as e:
-      flash('Incorrectly filled, try again')
-  return render_template('project.html')
+        flash('Only clients have access to this page, please login with a client account')
+        return redirect( url_for('index') )
+    else:
+      flash('You are not logged in. Please login or join')
+      return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
 
 
 @app.route('/projectApproval', methods=['POST', 'GET'])
@@ -241,7 +255,7 @@ def projectApproval():
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
-      if roleDB['role']:
+      if 'admin' in roleDB['role']:
         if request.method == 'POST':
           flash('in post')
           selectedPIDs = request.POST.getlist('projectID')
@@ -256,6 +270,7 @@ def projectApproval():
                                )
       else:
         flash('Only administrators have access to this page, please login with an admin account')
+        return redirect( url_for('index') )
     else:
         flash('You are not logged in. Please login or join')
         return redirect( url_for('index') )
@@ -312,8 +327,6 @@ def viewApplications():
       if 'client' in roleDB['role']:
         applications = updateDB.getApplicationsPerClient(conn, uid)
         print(applications)
-        # if request.method == 'POST':
-        #   pass
         return render_template('viewApplications.html', applications=applications)
       else:
         flash('Only clients have access to this page, please login with a client account')
