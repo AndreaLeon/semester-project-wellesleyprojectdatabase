@@ -39,7 +39,7 @@ def getUnapprovedProjects(conn):
 	'''Finds user role in user table based on uid
 		By: Andrea Leon'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT creator, approver, name, compensation, rolesOpen,requirements, description,\
+	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen, requirements, description,\
 	 duration FROM project WHERE approver is NULL')
 	return curs.fetchall()
 

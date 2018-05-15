@@ -29,14 +29,15 @@
   <h1>Approve Projects</h1>
 
   <table class="uk-table" id="projectList">
-    <tr><th>Approve</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
+    <tr><th></th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
     {% if projects %}
       {% for project in projects %}
       <tr class="projectsRow">
           <td>
-            <form class="projectChoose" action="" method="POST">
-                  <input class="uk-radio" type="radio" name="projectID" value={{project.pid}}></label>
-            </form> 
+            <form class="projectChoose" method="POST">
+              <input type="hidden" name="projectID" value={{project.pid}}>
+              <input class="uk-button" type="submit" value="approve" style="border: 2px solid teal; background-color: teal; color: white;">
+            </form>
           </td>
           <td>{{project.name}}</td>
           <td>{{project.duration}}</td>
@@ -48,9 +49,6 @@
       </tr>
       {% endfor %}
     {% endif %}
-    
-<!--     <input class="uk-button" type="submit" method="POST" value="approve selected projects" style="border: 2px solid teal; background-color: teal; color: white;"> -->
-    <button type="button" formmethod="POST" form="projectChoose" style="border: 2px solid teal; background-color: teal; color: white;">APPROVE SELECTED PROJECTS</button>
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     

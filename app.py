@@ -262,17 +262,15 @@ def projectApproval():
       if 'admin' in roleDB['role']:
         if request.method == 'POST':
           flash('in post')
-          selectedPIDs = request.POST.getlist('projectID')
-          for pid in selectedPIDs:
-            flash(pid)
-            updateDB.approveProject(conn, uid, pid) 
-            flash("selection approved")
-        else:
-          projects = updateDB.getUnapprovedProjects(conn)
-          return render_template('projectApproval.html',
-                                projects = projects,
-                                role = roleCheck
-                               )
+          pid = request.form['projectID']
+          flash(pid)
+          updateDB.approveProject(conn, uid, pid) 
+          flash("selection approved")
+        projects = updateDB.getUnapprovedProjects(conn)
+        return render_template('projectApproval.html',
+                              projects = projects,
+                              role = roleCheck
+                             )
       else:
         flash('Only administrators have access to this page, please login with an admin account')
         return redirect( url_for('index') )
