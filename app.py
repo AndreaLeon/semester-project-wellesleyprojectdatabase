@@ -24,10 +24,23 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
 
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
+def getRole():
+  '''checks to see user role if UID is present in the session
+    By: Andrea Leon'''
+  conn = dbconn2.connect(dsn)
+  role1 = ''
+  if 'uid' in session:
+    uid = session['uid']
+    roleDB = updateDB.checkUserRole(conn, uid)
+    role1 = roleDB['role']
+  return role1
+
 @app.route('/')
 def index():
+  roleCheck = getRole()
   return render_template('main.html',
-                           title='Main Page')
+                           title='Main Page',
+                           role = roleCheck)
 
 
 @app.route('/join/', methods=["POST"])
@@ -204,6 +217,7 @@ def createProfile():
 def createProject():
   conn = dbconn2.connect(dsn)
   try:
+    roleCheck = getRole()
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -223,9 +237,9 @@ def createProject():
             updateDB.addProject(conn, projCreator, projName, projDur, projComp,\
             projRoles, projReq, projDesc)
             flash ("Project Submitted")
-            return render_template('project.html')
+            return render_template('project.html', role = roleCheck)
         else:
-          return render_template('project.html') 
+          return render_template('project.html', role = roleCheck) 
       else:
         flash('Only clients have access to this page, please login with a client account')
         return redirect( url_for('index') )
@@ -239,6 +253,7 @@ def createProject():
 
 @app.route('/projectApproval', methods=['POST', 'GET'])
 def projectApproval():
+  roleCheck = getRole()
   conn = dbconn2.connect(dsn)
   try:
     if 'uid' in session:
@@ -255,7 +270,8 @@ def projectApproval():
         else:
           projects = updateDB.getUnapprovedProjects(conn)
           return render_template('projectApproval.html',
-                                projects = projects
+                                projects = projects,
+                                role = roleCheck
                                )
       else:
         flash('Only administrators have access to this page, please login with an admin account')
