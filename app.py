@@ -260,12 +260,11 @@ def projectApproval():
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
       if 'admin' in roleDB['role']:
-        if request.method == 'POST':
-          flash('in post')
-          pid = request.form['projectID']
-          flash(pid)
-          updateDB.approveProject(conn, uid, pid) 
-          flash("selection approved")
+        flash("in original if")
+        # if request.method == 'POST':
+        #   pid = request.form['projectID']
+        #   updateDB.approveProject(conn, uid, pid) 
+        #   flash("selection approved")
         projects = updateDB.getUnapprovedProjects(conn)
         return render_template('projectApproval.html',
                               projects = projects,
@@ -281,6 +280,36 @@ def projectApproval():
     flash(e)
     return redirect( url_for('index') )
 
+
+@app.route('/projectApprovalAjax', methods=['POST', 'GET'])
+def projectApprovalAjax():
+  roleCheck = getRole()
+  conn = dbconn2.connect(dsn)
+  try:
+    flash("in ajax")
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'admin' in roleDB['role']:
+        if request.method == 'POST':
+          flash("in post")
+          pid = request.form['projectID']
+          updateDB.approveProject(conn, uid, pid) 
+          flash("selection approved")
+        # projects = updateDB.getUnapprovedProjects(conn)
+        # return render_template('projectApproval.html',
+        #                       projects = projects,
+        #                       role = roleCheck
+        #                      )
+      else:
+        flash('Only administrators have access to this page, please login with an admin account')
+        return redirect( url_for('index') )
+    else:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
 
 
 @app.route('/browseProjects/', methods=['GET', 'POST'])

@@ -36,7 +36,7 @@
           <td>
             <form class="projectChoose" method="POST">
               <input type="hidden" name="projectID" value={{project.pid}}>
-              <input class="uk-button" type="submit" value="approve" style="border: 2px solid teal; background-color: teal; color: white;">
+              <input class="uk-button" name="approveButton" type="submit" value="approve" style="border: 2px solid teal; background-color: teal; color: white;">
             </form>
           </td>
           <td>{{project.name}}</td>
@@ -53,5 +53,19 @@
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <!-- JS code would go here -->
-    
+    <script>
+      var pid = 0;
+      var eventHolder = 0;
+      $("#projectList").on('click', "[name=approveButton]", function(event){
+        console.log('#projectList clicked')
+        pid = $(this).closest(".projectChoose").find("[name=projectID]").attr("value");
+        console.log('pid value is:')
+        console.log(pid)
+        eventHolder = this;
+        $.post("/projectApprovalAjax", function(this) {
+          $(eventHolder).text("APPROVED");
+          $(eventHolder).style.backgroundColor = 'green';
+        });
+      });
+    </script>
 {% endblock %}    
