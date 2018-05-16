@@ -21,19 +21,23 @@
       td{
         border: 2px solid teal;
       }
+      body{
+        margin: 10px;
+      }
   </style>
   
   <h1>Approve Projects</h1>
 
   <table class="uk-table" id="projectList">
-    <tr><th>Approve</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
+    <tr><th></th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>User</th></tr>
     {% if projects %}
       {% for project in projects %}
       <tr class="projectsRow">
           <td>
-            <form class="projectChoose" action="" method="POST">
-                  <input class="uk-radio" type="radio" name="projectID" value={{project.pid}}></label>
-            </form> 
+            <form class="projectChoose" method="POST">
+              <input type="hidden" name="projectID" value={{project.pid}}>
+              <input class="uk-button" name="approveButton" type="submit" value="approve" style="border: 2px solid teal; background-color: teal; color: white;">
+            </form>
           </td>
           <td>{{project.name}}</td>
           <td>{{project.duration}}</td>
@@ -45,10 +49,23 @@
       </tr>
       {% endfor %}
     {% endif %}
-    
-    <input class="uk-button" type="submit" value="Approve Selected Projects">
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
     <!-- JS code would go here -->
+    <script>
+      var pid = 0;
+      var eventHolder = 0;
+      $("#projectList").on('click', "[name=approveButton]", function(event){
+        console.log('#projectList clicked')
+        pid = $(this).closest(".projectChoose").find("[name=projectID]").attr("value");
+        console.log('pid value is:')
+        console.log(pid)
+        eventHolder = this;
+        $.post("/projectApprovalAjax", function(this) {
+          $(eventHolder).text("APPROVED");
+          $(eventHolder).style.backgroundColor = 'green';
+        });
+      });
+    </script>
 {% endblock %}    
