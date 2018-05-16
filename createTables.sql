@@ -1,3 +1,5 @@
+#createTables.sql
+
 use wprojdb_db;
 
 /* ## Eliana's original code

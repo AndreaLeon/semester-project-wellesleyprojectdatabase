@@ -25,28 +25,65 @@
   </style>
   
   <h1>Browse Projects</h1>
-  <h4> Apply to a project by clicking the button with the number in the column labelled "Apply"</h4>
-  <table class="uk-table" id="projectList">
-    <tr><th>Apply</th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th></tr>
-    {% if projects %}
-      {% for project in projects %}
-      <tr class="projectsRow">
-           <td>
-            <form class="projectApply" action="" method="POST">
-                  <button class="uk-button" type="submit" name="projectID" value={{project.pid}}>Apply</button></label>
-            </form> 
-          </td> 
-          <td>{{project.name}}</td> 
-          <td>{{project.duration}}</td>
-          <td>{{project.compensation}}</td>
-          <td>{{project.rolesOpen}}</td>
-          <td>{{project.requirements}}</td>
-          <td>{{project.description}}</td>
-      </tr>
-      {% endfor %}
-    {% endif %}
+  <h4>Apply to a project by clicking the button with the number in the column labeled "Apply"</h4>
 
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-    
-    <!-- JS code would go here -->
+  <h4>Click on a column header to sort the table rows by that column.</h4>
+
+  
+  <table class="tablesorter" id="projects-table"> <!--uk-table table-bordered table-striped -->
+    <thead>
+      <tr>
+        <th id="apply">Apply</th>
+        <th id="title">Title</th>
+        <th id="duration">Duration</th>
+        <th id="compensation">Compensation</th>
+        <th id="num-students">Number of Students</th>
+        <th id="requirements">Requirements</th>
+        <th id="description">Description</th>
+      </tr>
+    </thead>
+
+
+    <tbody id="project-body">
+      {% if projects %}
+        {% for project in projects %}
+
+        <tr class="projectsRow">
+             <td>
+              <form class="projectApply" action="" method="POST">
+                    <button class="uk-button" type="submit" name="projectID" value={{project.pid}}>Apply</button></label>
+              </form> 
+            </td> 
+            <td>{{project.name}}</td> 
+            <td>{{project.duration}}</td>
+            <td>{{project.compensation}}</td>
+            <td>{{project.rolesOpen}}</td>
+            <td>{{project.requirements}}</td>
+            <td>{{project.description}}</td>
+        </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>  
+  </table>
+
+
+
+
+
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+<!-- Table Sorter -->
+<script type="text/javascript" src="/static/tablesorter-master/jquery-latest.js"></script>
+<script type="text/javascript" src="/static/tablesorter-master/jquery.tablesorter.js"></script>
+<script type="text/javascript" src="/static/tablesorter-master/jquery.tablesorter.widgets.js"></script>
+
+<script>
+
+$(document).ready(function()
+  {
+    $("#projects-table").tablesorter();
+  });
+
+</script>
+
+
 {% endblock %}    
