@@ -24,24 +24,13 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
 
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
-def getRole():
-  '''checks to see user role if UID is present in the session
-    By: Andrea Leon'''
-  conn = dbconn2.connect(dsn)
-  role1 = ''
-  if 'uid' in session:
-    uid = session['uid']
-    roleDB = updateDB.checkUserRole(conn, uid)
-    role1 = roleDB['role']
-  return role1
-
 @app.route('/')
 def index():
-  roleCheck = getRole()
+  conn = dbconn2.connect(dsn)
+  roleCheck = updateDB.getRole(conn, session)
   return render_template('main.html',
                            title='Main Page',
                            role = roleCheck)
-
 
 @app.route('/join/', methods=["POST"])
 def join():
@@ -95,15 +84,15 @@ def join():
 def login():
   conn = dbconn2.connect(dsn)
   flaskemail = request.cookies.get('flaskemail')
-  
+  roleCheck = updateDB.getRole(conn, session)
   if request.method == 'GET':
     if 'uid' in session:
       return redirect(url_for('user', uid=session['uid']))
     else:
       return render_template('login.html',
                               email=flaskemail if flaskemail else "",
-                              role = getRole(),
-                              allCookies=request.cookies)
+                              allCookies=request.cookies, 
+                              role = roleCheck)
   else:
     #case 2: user submitted a form with their name 
     try:
@@ -144,13 +133,15 @@ def login():
 @app.route('/user/<uid>')
 def user(uid):
   try:
+      conn = dbconn2.connect(dsn)
+      roleCheck = updateDB.getRole(conn, session)
       if 'uid' in session:
         uid = session['uid']
         name = session['name']
         return render_template('greet.html',
                                 name=name,
-                                role=getRole(),
-                                allCookies=request.cookies
+                                allCookies=request.cookies,
+                                role = roleCheck
                                )
       else:
           flash('You are not logged in. Please login or join')
@@ -189,6 +180,7 @@ def logout():
 def createProfile():
   conn = dbconn2.connect(dsn)
   try: 
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -203,9 +195,9 @@ def createProfile():
           updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
           internship_exp, bg_info, uid)
           flash ("Profile Update Submitted")
-          return render_template('profile.html')
+          return render_template('profile.html', role = roleCheck)
         else:
-          return render_template('profile.html')
+          return render_template('profile.html', role = roleCheck)
       else:
           flash('Only students have access to this page, please login with a student account')
           return redirect( url_for('index') )
@@ -222,7 +214,7 @@ def createProfile():
 def createProject():
   conn = dbconn2.connect(dsn)
   try:
-    roleCheck = getRole()
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -258,14 +250,13 @@ def createProject():
 
 @app.route('/projectApproval', methods=['POST', 'GET'])
 def projectApproval():
-  roleCheck = getRole()
   conn = dbconn2.connect(dsn)
+  roleCheck = updateDB.getRole(conn, session)
   try:
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
       if 'admin' in roleDB['role']:
-        # flash("in original if")
         if request.method == 'POST':
           pid = request.form['projectID']
           updateDB.approveProject(conn, uid, pid) 
@@ -290,15 +281,10 @@ def projectApproval():
 def projectApprovalAjax():
   conn = dbconn2.connect(dsn)
 
-  print 'in ajax route'
   if 'uid' in session:
     uid = session['uid']
-    print 'uid retrueved from session'
-
     pid = request.form['pid']
-    print 'requested form ok'
     updateDB.approveProject(conn, uid, pid) 
-    print 'approve project call completed'
     return jsonify({'approval':'approved!'})
 
 
@@ -309,6 +295,7 @@ def browseProjects():
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
+      roleCheck = updateDB.getRole(conn, session)
       if 'student' in roleDB['role']:
         if request.method == 'POST':
           # flash('in post')
@@ -330,7 +317,7 @@ def browseProjects():
           projects = updateDB.getProjects(conn)
         return render_template('browse.html',
                               projects = projects,
-                              role = getRole()
+                              role = roleCheck
                               )
       else:
         flash('Only students have access to this page, please login with a student account')
@@ -344,13 +331,14 @@ def browseProjects():
 def viewApplications():
   conn = dbconn2.connect(dsn)
   try:
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
       if 'client' in roleDB['role']:
         applications = updateDB.getApplicationsPerClient(conn, uid)
         print(applications)
-        return render_template('viewApplications.html', applications=applications)
+        return render_template('viewApplications.html', applications=applications, role = roleCheck)
       else:
         flash('Only clients have access to this page, please login with a client account')
     else:
@@ -364,8 +352,9 @@ def viewApplications():
 def profile():
   conn = dbconn2.connect(dsn)
   try:
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
-      return render_template('viewProfile.html')
+      return render_template('viewProfile.html', role = roleCheck)
     else:
       flash('You are not logged in. Please login or join')
       return redirect( url_for('index') )
@@ -386,6 +375,33 @@ def profile():
 #     flash(e)
 #     return redirect( url_for('index') )
 
+@app.route('/clientProjects', methods=['POST', 'GET'])
+def clientProjects():
+  conn = dbconn2.connect(dsn)
+  roleCheck = updateDB.getRole(conn, session)
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'client' in roleDB['role']:
+        if request.method == 'POST':
+          pid = request.form['projectID']
+          updateDB.deleteProject(conn, pid) 
+          flash("project deleted")
+        projects = updateDB.getUserProjects(conn, uid)
+        return render_template('clientProjects.html',
+                              projects = projects,
+                              role = roleCheck
+                             )
+      else:
+        flash('Only clients have access to this page, please login with a client account')
+        return redirect( url_for('index') )
+    else:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
 
 if __name__ == '__main__':
 

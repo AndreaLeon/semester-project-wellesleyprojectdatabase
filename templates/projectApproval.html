@@ -1,6 +1,6 @@
 <!-- Andrea Leon
-     project.html
-     Created 4/29/18
+     projectApproval.html
+     Created 5/6/18
 -->
 
 {% extends "base.html" %}
@@ -20,9 +20,6 @@
       }
       td{
         border: 2px solid teal;
-      }
-      body{
-        margin: 10px;
       }
   </style>
   
@@ -57,23 +54,18 @@
     
     <!-- JS code would go here -->
     <script>
-      console.log('in it to win it');
+      
       $("#projectList").on('click', "[name=approveButton]", function(event) {
         console.log('projectList clicked');
         $target = $(event.target);
-        console.log($target);
         var pid = $target.closest("[data-pid]").attr("data-pid");
-        var buttonval = $(this).attr('value');
-        console.log('values given to variables');
         $.post("/projectApprovalAjax/",
               {'pid': pid},
               function(resp){
                 console.log(resp['approval']);
-                console.log("in post fcn");
                 $target.closest(".projectsRow").find(".uk-button").prop("value", "APPROVED");
                 $target.closest(".projectsRow").find(".uk-button").css("background-color","green");
                 $target.closest(".projectsRow").find(".uk-button").css("border","2px solid green");
-                console.log("updated button");
               }
         );
       });

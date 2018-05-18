@@ -12,8 +12,6 @@ import dbconn2
 # ================================================================
 # The functions that do most of the work.  
 
-#TO DO: Insert Functions Below
-
 def checkUser(conn, email):
 	'''Finds if user exists in user table based on email
 		By: Eliana Marostica'''
@@ -36,7 +34,7 @@ def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projRe
 	 duration) VALUES (%s, %s, %s, %s, %s, %s, %s)', [projCreator, projName, projComp, projRoles, projReq, projDesc, projDur])
 
 def getUnapprovedProjects(conn):
-	'''Finds user role in user table based on uid
+	'''gets all projects in project that have NULL approver
 		By: Andrea Leon'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen, requirements, description,\
@@ -44,10 +42,23 @@ def getUnapprovedProjects(conn):
 	return curs.fetchall()
 
 def approveProject(conn, uid, pid):
-  '''Finds user role in user table based on uid
+  '''adds UID to approver column of project (initially set to NULL)
       By: Andrea Leon'''
   curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
   curs.execute('UPDATE project SET approver = %s WHERE pid = %s', [uid, pid])
+
+def deleteProject(conn, pid):
+  '''deletes project from project based on given pid
+      By: Andrea Leon'''
+  curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+  curs.execute('DELETE FROM project WHERE pid = %s', [pid])
+
+def getUserProjects(conn, uid):
+	'''gets all projects under given UID"
+		By: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project WHERE creator = %s', [uid])
+	return curs.fetchall()
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
@@ -84,6 +95,16 @@ def getProjects(conn):
 # 	curs.execute('SELECT name FROM user WHERE email = %s', [email])
 # 	row = curs.fetchone()
 # 	return row['name']
+
+def getRole(conn, session):
+  '''checks to see user role if UID is present in the session
+    By: Andrea Leon'''
+  role1 = ''
+  if 'uid' in session:
+    uid = session['uid']
+    roleDB = checkUserRole(conn, uid)
+    role1 = roleDB['role']
+  return role1
 
 def updateUser(conn, major, prog_languages, courses, research_exp, internship_exp, bg_info, uid):
 	'''Updates the user table to add the information input by the
@@ -124,10 +145,6 @@ def getProfileInfo(conn, uid):
 	curs.execute('SELECT * FROM user WHERE uid=%s;', [uid])
 	profile = curs.fetchone()
 	return profile
-
-
-
-
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
