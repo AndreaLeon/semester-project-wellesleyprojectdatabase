@@ -28,7 +28,9 @@
           <ul class="uk-navbar-nav">
               <li><a href="{{ url_for('index') }}">Home</a>
               <li><a href="{{ url_for('login') }}">Login/Logout</a>
+              {% if role != '' %}
               <li><a href="{{ url_for('profile') }}">Profile</a>
+              {% endif %}
               {% if 'admin' in role %}
                 <li><a href="{{ url_for('projectApproval') }}">Approve Pending Projects</a>
               {% endif %}
@@ -38,8 +40,8 @@
               {% endif %}
               {% if 'client' in role %}
                 <li><a href="{{ url_for('viewApplications')}}">View Applications</a>
-                <li><a href="{{ url_for('createProject') }}">Create a New Project</a>
                 <li><a href="{{ url_for('clientProjects') }}">View Projects</a>
+                <li><a href="{{ url_for('createProject') }}">Create a New Project</a>
               {% endif %}
           </ul>
       </div>
@@ -47,7 +49,6 @@
 
   <center><h1>Wellesley Project Database</h1>
   <div id="content">
-
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul class=flashes>
