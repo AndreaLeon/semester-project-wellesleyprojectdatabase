@@ -10,6 +10,7 @@
     <meta name=description content="">
     <meta name=keywords content="">
     <title>CS304 Final Project: Wellesley Project Database</title>
+    <link rel="stylesheet" href="http://tablesorter.com/themes/blue/style.css" type="text/css" media="print, projection, screen" />
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
      <!-- UIkit CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/css/uikit.min.css"/>
@@ -17,8 +18,9 @@
     <!-- UIkit JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.0.0-beta.40/js/uikit-icons.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/themes/style.css">
-    <link rel="stylesheet" href="http://tablesorter.com/themes/blue/style.css" type="text/css" media="print, projection, screen" />
+
+    <!-- personal style sheet -->
+    <link rel="stylesheet" type= "text/css" href= "{{ url_for('static',filename='themes/style.css') }}">
 
   </head>
   <body>
@@ -60,12 +62,13 @@
     {% endwith%}
   
   </div>
-
   </center>
 
+  <div class="blockContent">
   {% block content %}
      <h2>{{title}}</h2>
   {% endblock %}
+  </div>
   </body>
 </html>
 

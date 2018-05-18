@@ -1,0 +1,38 @@
+/*Andrea Leon
+    style.css
+    created 5/18/18*/
+
+.selected { font-weight: bold; }
+
+table {
+	border-collapse: collapse;
+}
+
+tr {
+	border: 2px solid LightBlue;
+	padding: 2ex;
+}
+
+th{
+	border: 2px solid LightBlue;
+}
+
+td{
+	border: 2px solid LightBlue;
+}
+
+.blockContent{
+	margin: 35px;
+}
+
+input#deleteButton{
+	border: 2px solid red;
+	background-color: red; 
+	color: white;
+}
+
+input#approveButton{
+	border: 2px solid LightBlue;
+	background-color: LightBlue; 
+	color: white;
+}
