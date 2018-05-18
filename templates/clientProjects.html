@@ -1,0 +1,54 @@
+<!-- Andrea Leon
+     clientProjects.html
+     Created 4/29/18
+-->
+
+{% extends "base.html" %}
+
+{% block content %}
+  <style scoped>
+      .selected { font-weight: bold; }
+      table {
+              border-collapse: collapse;
+      }
+      tr {
+          border: 2px solid teal;
+          padding: 2ex;
+      }
+      th{
+        border: 2px solid teal;
+      }
+      td{
+        border: 2px solid teal;
+      }
+      body{
+        margin: 10px;
+      }
+  </style>
+  
+  <h1>Your Projects</h1>
+
+  <table class="uk-table" id="projectList">
+    <tr><th></th><th>Title</th><th>Duration</th><th>Compensation</th><th>Number of Students</th><th>Requirements</th><th>Description</th><th>Approver</th></tr>
+    {% if projects %}
+      {% for project in projects %}
+      <tr class="projectsRow">
+          <td>
+            <form class="projectChoose" method="POST">
+              <input type="hidden" name="projectID" value={{project.pid}}>
+              <input class="uk-button" name="deleteButton" type="submit" value="Delete" style="border: 2px solid teal; background-color: teal; color: white;">
+            </form>
+          </td>
+          <td>{{project.name}}</td>
+          <td>{{project.duration}}</td>
+          <td>{{project.compensation}}</td>
+          <td>{{project.rolesOpen}}</td>
+          <td>{{project.requirements}}</td>
+          <td>{{project.description}}</td>
+          <td>{{project.approver}}</td>
+      </tr>
+      {% endfor %}
+    {% endif %}
+
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+{% endblock %}    

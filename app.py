@@ -249,8 +249,8 @@ def createProject():
 
 @app.route('/projectApproval', methods=['POST', 'GET'])
 def projectApproval():
-  roleCheck = updateDB.getRole(conn, session)
   conn = dbconn2.connect(dsn)
+  roleCheck = updateDB.getRole(conn, session)
   try:
     if 'uid' in session:
       uid = session['uid']
@@ -395,6 +395,33 @@ def profile():
 #     flash(e)
 #     return redirect( url_for('index') )
 
+@app.route('/clientProjects', methods=['POST', 'GET'])
+def clientProjects():
+  conn = dbconn2.connect(dsn)
+  roleCheck = updateDB.getRole(conn, session)
+  try:
+    if 'uid' in session:
+      uid = session['uid']
+      roleDB = updateDB.checkUserRole(conn, uid)
+      if 'client' in roleDB['role']:
+        if request.method == 'POST':
+          pid = request.form['projectID']
+          updateDB.deleteProject(conn, pid) 
+          flash("project deleted")
+        projects = updateDB.getUserProjects(conn, uid)
+        return render_template('clientProjects.html',
+                              projects = projects,
+                              role = roleCheck
+                             )
+      else:
+        flash('Only clients have access to this page, please login with a client account')
+        return redirect( url_for('index') )
+    else:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+    return redirect( url_for('index') )
 
 if __name__ == '__main__':
 
