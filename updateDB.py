@@ -85,6 +85,16 @@ def getProjects(conn):
 # 	row = curs.fetchone()
 # 	return row['name']
 
+def getRole(conn):
+  '''checks to see user role if UID is present in the session
+    By: Andrea Leon'''
+  role1 = ''
+  if 'uid' in session:
+    uid = session['uid']
+    roleDB = checkUserRole(conn, uid)
+    role1 = roleDB['role']
+  return role1
+
 def updateUser(conn, major, prog_languages, courses, research_exp, internship_exp, bg_info, uid):
 	'''Updates the user table to add the information input by the
 	user on the profile.html page
