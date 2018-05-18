@@ -10,7 +10,7 @@
   <center>
     <h2>Login</h2>
 
-    <form id="loginform" method="post" action="url_for('login')">
+    <form id="loginform" method="post" action="{{ url_for('login') }}">
         <p><label for="email">Email: <input type="text" name="email" value={{email}}></label></p>
         <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
         <p><button class="uk-button" type="submit">Login</button></p>
@@ -19,7 +19,7 @@
 
     <h2>New to WPDB? Join Below</h2>
 
-    <form id="joinform" method="post" action="url_for('join')">
+    <form id="joinform" method="post" action="{{ url_for('join') }}">
         <p><label for="name">Name: <input type="text" name="name"></label></p>
         <p><label for="email">Email: <input type="text" name="email"></label></p>
         <p><label for="passwd1">Password: <input type="password" name="passwd1"></label></p>
