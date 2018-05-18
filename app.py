@@ -209,7 +209,8 @@ def createProfile():
     flash('Incorrectly filled, try again')
     return redirect( url_for('index') )
 
-
+# route for createProject
+# client type users can create a project to be added to the project DB
 @app.route('/createProject', methods=['GET', 'POST'])
 def createProject():
   conn = dbconn2.connect(dsn)
@@ -226,7 +227,7 @@ def createProject():
           projRoles = request.form['rolesOpen']
           projReq = request.form['requirements']
           projDesc = request.form['description']
-          projCreator = uid #TODO: hard coded until can get user info (to do in Alpha)
+          projCreator = uid
           if (projName == '' or projDur == '' or projComp == '' or projRoles == ''\
             or projReq == '' or projDesc == ''):
             flash('Please fill out all fields.')
@@ -247,7 +248,8 @@ def createProject():
     flash(e)
     return redirect( url_for('index') )
 
-
+# route for projectApproval
+# admin type accounts can approve a client's project to be viewable by student type accounts
 @app.route('/projectApproval', methods=['POST', 'GET'])
 def projectApproval():
   conn = dbconn2.connect(dsn)
@@ -276,7 +278,8 @@ def projectApproval():
     flash(e)
     return redirect( url_for('index') )
 
-
+# route for projectApprovalAjax
+# ajax funcitonality allows projects to be approved and remain on page until reload
 @app.route('/projectApprovalAjax/', methods=['POST'])
 def projectApprovalAjax():
   conn = dbconn2.connect(dsn)
@@ -375,6 +378,9 @@ def profile():
 #     flash(e)
 #     return redirect( url_for('index') )
 
+# route for clientProjects
+# client type accounts can view projects they have created to see if they have been approved
+# and to delete any of their projects
 @app.route('/clientProjects', methods=['POST', 'GET'])
 def clientProjects():
   conn = dbconn2.connect(dsn)
@@ -387,7 +393,7 @@ def clientProjects():
         if request.method == 'POST':
           pid = request.form['projectID']
           updateDB.deleteProject(conn, pid) 
-          flash("project deleted")
+          flash("Project Deleted")
         projects = updateDB.getUserProjects(conn, uid)
         return render_template('clientProjects.html',
                               projects = projects,
