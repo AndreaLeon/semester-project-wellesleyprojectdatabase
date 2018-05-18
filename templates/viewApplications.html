@@ -8,23 +8,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <style scoped>
-      .selected { font-weight: bold; }
-      table {
-              border-collapse: collapse;
-      }
-      tr {
-          border: 2px solid teal;
-          padding: 2ex;
-      }
-      th{
-        border: 2px solid teal;
-      }
-      td{
-        border: 2px solid teal;
-      }
-  </style>
-  
   <h1>View Applications</h1>
 
   <table class="uk-table" id="applicationList">
@@ -37,5 +20,4 @@
       </tr>
       {% endfor %}
     {% endif %}
-    
 {% endblock %}    

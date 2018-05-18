@@ -6,23 +6,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <style scoped>
-      .selected { font-weight: bold; }
-      table {
-              border-collapse: collapse;
-      }
-      tr {
-          border: 2px solid teal;
-          padding: 2ex;
-      }
-      th{
-        border: 2px solid teal;
-      }
-      td{
-        border: 2px solid teal;
-      }
-  </style>
-  
   <h1>Your Projects</h1>
 
   <table class="uk-table" id="projectList">
@@ -33,7 +16,7 @@
           <td>
             <form class="projectChoose" method="POST">
               <input type="hidden" name="projectID" value={{project.pid}}>
-              <input class="uk-button" name="deleteButton" type="submit" value="Delete" style="border: 2px solid teal; background-color: teal; color: white;">
+              <input class="uk-button" id="deleteButton" name="deleteButton" type="submit" value="Delete">
             </form>
           </td>
           <td>{{project.name}}</td>

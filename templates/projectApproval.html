@@ -6,23 +6,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <style scoped>
-      .selected { font-weight: bold; }
-      table {
-              border-collapse: collapse;
-      }
-      tr {
-          border: 2px solid teal;
-          padding: 2ex;
-      }
-      th{
-        border: 2px solid teal;
-      }
-      td{
-        border: 2px solid teal;
-      }
-  </style>
-  
   <h1>Approve Projects</h1>
 
   <table class="uk-table" id="projectList">
@@ -35,7 +18,7 @@
 
               <input type="hidden" name="projectID" value={{project.pid}}>
 
-              <input class="uk-button" name="approveButton" type="button" value="APPROVE" style="border: 2px solid blue; background-color: blue; color: white;">
+              <input class="uk-button" name="approveButton" type="button" value="APPROVE" id="approveButton">
             
             </form>
           </td>
