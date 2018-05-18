@@ -12,8 +12,6 @@ import dbconn2
 # ================================================================
 # The functions that do most of the work.  
 
-#TO DO: Insert Functions Below
-
 def checkUser(conn, email):
 	'''Finds if user exists in user table based on email
 		By: Eliana Marostica'''
@@ -147,10 +145,6 @@ def getProfileInfo(conn, uid):
 	curs.execute('SELECT * FROM user WHERE uid=%s;', [uid])
 	profile = curs.fetchone()
 	return profile
-
-
-
-
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,
