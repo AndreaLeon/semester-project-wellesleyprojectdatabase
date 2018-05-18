@@ -102,6 +102,7 @@ def login():
     else:
       return render_template('login.html',
                               email=flaskemail if flaskemail else "",
+                              role = getRole(),
                               allCookies=request.cookies)
   else:
     #case 2: user submitted a form with their name 
@@ -148,6 +149,7 @@ def user(uid):
         name = session['name']
         return render_template('greet.html',
                                 name=name,
+                                role=getRole(),
                                 allCookies=request.cookies
                                )
       else:
@@ -339,7 +341,8 @@ def browseProjects():
         else:
           projects = updateDB.getProjects(conn)
         return render_template('browse.html',
-                              projects = projects
+                              projects = projects,
+                              role = getRole()
                               )
       else:
         flash('Only students have access to this page, please login with a student account')
