@@ -117,6 +117,14 @@ def getApplicationsPerClient(conn, uid):
 	applications = curs.fetchall()
 	return applications	
 
+def getProfileInfo(conn, uid):
+	''' Gets the profile information for a user given their uid
+		By: Parul Koul'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT * FROM user WHERE uid=%s;', [uid])
+	profile = curs.fetchone()
+	return profile
+
 
 
 
