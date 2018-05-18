@@ -90,7 +90,7 @@ def login():
       return redirect(url_for('user', uid=session['uid']))
     else:
       return render_template('login.html',
-                              email=flaskemail if flaskemail else "",
+                              email=flaskemail or "",
                               allCookies=request.cookies, 
                               role = roleCheck)
   else:
