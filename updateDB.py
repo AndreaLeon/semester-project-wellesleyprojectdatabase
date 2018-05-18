@@ -36,7 +36,7 @@ def addProject(conn, projCreator, projName, projDur, projComp, projRoles, projRe
 	 duration) VALUES (%s, %s, %s, %s, %s, %s, %s)', [projCreator, projName, projComp, projRoles, projReq, projDesc, projDur])
 
 def getUnapprovedProjects(conn):
-	'''Finds user role in user table based on uid
+	'''gets all projects in project that have NULL approver
 		By: Andrea Leon'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
 	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen, requirements, description,\
@@ -44,10 +44,23 @@ def getUnapprovedProjects(conn):
 	return curs.fetchall()
 
 def approveProject(conn, uid, pid):
-  '''Finds user role in user table based on uid
+  '''adds UID to approver column of project (initially set to NULL)
       By: Andrea Leon'''
   curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
   curs.execute('UPDATE project SET approver = %s WHERE pid = %s', [uid, pid])
+
+def deleteProject(conn, pid):
+  '''deletes project from project based on given pid
+      By: Andrea Leon'''
+  curs = conn.cursor(MySQLdb.cursors.DictCursor) # results as Dictionaries
+  curs.execute('DELETE FROM project WHERE pid = %s', [pid])
+
+def getUserProjects(conn, uid):
+	'''gets all projects under given UID"
+		By: Andrea Leon'''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project WHERE creator = %s', [uid])
+	return curs.fetchall()
 
 def addUser(conn, email, name, role, hashed):
 	'''Adds a user to the user table
