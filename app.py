@@ -357,7 +357,12 @@ def profile():
   try:
     roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
-      return render_template('viewProfile.html', role = roleCheck)
+      uid = session['uid']
+      profile = updateDB.getProfileInfo(conn, uid)
+      if request.method == 'POST':
+        return redirect( url_for('createProfile') )
+      else:
+        return render_template('viewProfile.html', profile=profile, role = roleCheck)
     else:
       flash('You are not logged in. Please login or join')
       return redirect( url_for('index') )

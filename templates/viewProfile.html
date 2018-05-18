@@ -7,33 +7,44 @@
 
 {% block content %}
 
-<h1>Update Profile</h1>
+<style scoped>
+    .selected { font-weight: bold; }
+    table {
+            border-collapse: collapse;
+    }
+    tr {
+        border: 2px solid teal;
+        padding: 2ex;
+    }
+    th{
+      border: 2px solid teal;
+    }
+    td{
+      border: 2px solid teal;
+    }
+</style>
+
+<h1>Profile</h1>
+
+{% if profile %}
+
+<form class="editProfile" action="" method="POST">
+    <button class="uk-button" type="submit" name="editProfile">Edit Profile</button></label>
+</form> 
 
 <table class="uk-table" id="profile">
-<tr><td>Major</td> <td></td></tr>
-<tr><td>Programming languages</td> <td></td></tr>
-<tr><td>Courses</td> <td></td></tr>
-<tr><td>Research experience</td> <td></td></tr>
-<tr><td>Internship experiece</td> <td></td></tr>
-<tr><td>Background information</td> <td></td></tr>
+    <tr><td>Name</td> <td>{{profile.name}}</td></tr>
+    <tr><td>Email</td> <td>{{profile.email}}</td></tr>
+    <tr><td>Major</td> <td>{{profile.major}}</td></tr>
+    <tr><td>Courses</td> <td>{{profile.courses}}</td></tr>
+    <tr><td>Programming languages</td> <td>{{profile.programming_languages}}</td></tr>
+    <tr><td>Research experience</td> <td>{{profile.research_experience}}</td></tr>
+    <tr><td>Internship experiece</td> <td>{{profile.internship_experience}}</td></tr>
+    <tr><td>Background information</td> <td>{{profile.background_info}}</td></tr>
 </table>
 
+{% endif %}
 
-  <!-- <form id="profileForm" method="post">
-    <p><label for="major">Major: <input type="text" name="major"></label></p>
-    <p><label for="prog_languages">Programming languages you have experience with: </label><br>
-    <textarea class="uk-textarea" name="prog_languages" rows="2" cols="45" form= "profileForm"></textarea></p>
-    <p><label for="courses">Courses: </label><br>
-    <textarea class="uk-textarea" name="courses" rows="2" cols="45" form= "profileForm"></textarea></p>
-    <p><label for="research_exp">Research experience: </label><br>
-    <textarea class="uk-textarea" name="research_exp" rows="2" cols="45" form= "profileForm"></textarea></p>
-    <p><label for="internship_exp">Internship experience: </label><br>
-    <textarea class="uk-textarea" name="internship_exp" rows="2" cols="45" form= "profileForm"></textarea></p>
-    <p><label for="bg_info">Background info: </label><br>
-    <textarea class="uk-textarea" name="bg_info" rows="2" cols="45" form= "profileForm"></textarea></p>
-    <p><button class="uk-button" type="submit"> Update Profile</button></p>
-  </form> -->
-
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script> 
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script> 
     
 {% endblock%}
