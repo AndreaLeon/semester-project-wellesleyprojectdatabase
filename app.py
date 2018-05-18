@@ -158,6 +158,8 @@ def user(uid):
   except Exception as err:
       flash('some kind of error '+str(err))
       return redirect( url_for('index') )
+
+
                            
 @app.route('/logout/')
 def logout():
@@ -180,6 +182,7 @@ def logout():
   except Exception as err:
     flash('some kind of error '+str(err))
     return redirect( url_for('index') )
+
 
 
 @app.route('/createProfile',  methods=['GET', 'POST'])
@@ -370,6 +373,33 @@ def viewApplications():
   except Exception as e:
     flash(e)
   return redirect( url_for('index') )
+
+
+@app.route('/profile/', methods=['GET','POST'])
+def profile():
+  conn = dbconn2.connect(dsn)
+  try:
+    if 'uid' in session:
+      return render_template('viewProfile.html')
+    else:
+      flash('You are not logged in. Please login or join')
+      return redirect( url_for('index') )
+  except Exception as e:
+    flash(e)
+  return redirect( url_for('index') )
+
+# @app.route('/viewProfile/', methods=['GET', 'POST'])
+# def viewProfile():
+#   conn = dbconn2.connect(dsn)
+#   try:
+#     if 'uid' in session:
+#       return render_template('viewProfile')
+#     else:
+#       flash('You are not logged in. Please login or join')
+#       return redirect( url_for('login') )
+#   except Exception as e:
+#     flash(e)
+#     return redirect( url_for('index') )
 
 
 if __name__ == '__main__':

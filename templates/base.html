@@ -29,6 +29,7 @@
               <li><a href="{{ url_for('index') }}">Home</a>
               <li><a href="{{ url_for('login') }}">Login/Logout</a>
               <li><a href="{{ url_for('createProfile') }}">Create/Update Profile</a>
+              <li><a href="{{ url_for('profile') }}">Profile</a>
               {% if 'admin' in role %}
                 <li><a href="{{ url_for('projectApproval') }}">Approve Pending Projects</a>
               {% endif %}
