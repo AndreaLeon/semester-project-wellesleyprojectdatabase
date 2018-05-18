@@ -82,10 +82,10 @@ def getUIDName(conn, email):
 	return row['uid'], row['name']
 
 def getProjects(conn):
-	'''Retrieves all projects in the project table'''
-	#By: Eliana Marostica
+	'''Retrieves all projects in the project table that have been approved
+	By: Eliana Marostica'''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project')
+	curs.execute('SELECT pid, creator, approver, name, compensation, rolesOpen,requirements, description, duration FROM project WHERE approver IS NOT NULL;')
 	return curs.fetchall()
 
 # def getName(conn, email):
