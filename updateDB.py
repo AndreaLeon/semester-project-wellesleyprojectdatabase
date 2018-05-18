@@ -85,7 +85,7 @@ def getProjects(conn):
 # 	row = curs.fetchone()
 # 	return row['name']
 
-def getRole(conn):
+def getRole(conn, session):
   '''checks to see user role if UID is present in the session
     By: Andrea Leon'''
   role1 = ''

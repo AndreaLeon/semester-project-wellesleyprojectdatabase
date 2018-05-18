@@ -27,7 +27,7 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 @app.route('/')
 def index():
   conn = dbconn2.connect(dsn)
-  roleCheck = updateDB.getRole(conn)
+  roleCheck = updateDB.getRole(conn, session)
   return render_template('main.html',
                            title='Main Page',
                            role = roleCheck)
@@ -84,7 +84,7 @@ def join():
 def login():
   conn = dbconn2.connect(dsn)
   flaskemail = request.cookies.get('flaskemail')
-  roleCheck = updateDB.getRole(conn)
+  roleCheck = updateDB.getRole(conn, session)
   if request.method == 'GET':
     if 'uid' in session:
       return redirect(url_for('user', uid=session['uid']))
@@ -133,7 +133,7 @@ def login():
 def user(uid):
   try:
       conn = dbconn2.connect(dsn)
-      roleCheck = updateDB.getRole(conn)
+      roleCheck = updateDB.getRole(conn, session)
       if 'uid' in session:
         uid = session['uid']
         name = session['name']
@@ -179,7 +179,7 @@ def logout():
 def createProfile():
   conn = dbconn2.connect(dsn)
   try: 
-    roleCheck = updateDB.getRole(conn)
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -213,7 +213,7 @@ def createProfile():
 def createProject():
   conn = dbconn2.connect(dsn)
   try:
-    roleCheck = updateDB.getRole(conn)
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -249,7 +249,7 @@ def createProject():
 
 @app.route('/projectApproval', methods=['POST', 'GET'])
 def projectApproval():
-  roleCheck = updateDB.getRole(conn)
+  roleCheck = updateDB.getRole(conn, session)
   conn = dbconn2.connect(dsn)
   try:
     if 'uid' in session:
@@ -280,7 +280,7 @@ def projectApproval():
 @app.route('/projectApprovalAjax', methods=['POST', 'GET'])
 def projectApprovalAjax():
   conn = dbconn2.connect(dsn)
-  roleCheck = updateDB.getRole(conn)
+  roleCheck = updateDB.getRole(conn, session)
   try:
     flash("in ajax")
     if 'uid' in session:
@@ -315,7 +315,7 @@ def browseProjects():
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
-      roleCheck = updateDB.getRole(conn)
+      roleCheck = updateDB.getRole(conn, session)
       if 'student' in roleDB['role']:
         if request.method == 'POST':
           # flash('in post')
@@ -351,7 +351,7 @@ def browseProjects():
 def viewApplications():
   conn = dbconn2.connect(dsn)
   try:
-    roleCheck = updateDB.getRole(conn)
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       uid = session['uid']
       roleDB = updateDB.checkUserRole(conn, uid)
@@ -372,7 +372,7 @@ def viewApplications():
 def profile():
   conn = dbconn2.connect(dsn)
   try:
-    roleCheck = updateDB.getRole(conn)
+    roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
       return render_template('viewProfile.html', role = roleCheck)
     else:
