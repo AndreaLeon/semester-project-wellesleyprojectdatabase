@@ -323,14 +323,6 @@ def browseProjects():
       roleCheck = updateDB.getRole(conn, session)
       if 'student' in roleDB['role']:
         if request.method == 'POST':
-          # flash('in post')
-          # selectedPIDs = request.POST.getlist('projectID')
-          # for pid in selectedPIDs:
-          #   flash(pid)
-          #   # updateDB.approveProject(conn, uid, pid) 
-          #   updateDB.applyToProject(conn, uid, pid)
-          #   flash("selection approved")
-          # # pass
           pid = request.form['projectID']
           result = updateDB.applyToProject(conn, uid, pid)
           if result == None:
