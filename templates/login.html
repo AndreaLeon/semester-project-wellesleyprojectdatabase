@@ -13,31 +13,53 @@
     <form id="loginform" method="post" action="{{ url_for('login') }}">
         <p><label for="email">Email: <input type="text" name="email" value={{email}}></label></p>
         <p><label for="passwd">Password: <input type="password" name="passwd"></label></p>
-        <p><button class="uk-button" type="submit">Login</button></p>
+        <p><button class="uk-button" id="button" type="submit">Login</button></p>
     </form>
     
 
     <h2>New to WPDB? Join Below</h2>
 
     <form id="joinform" method="post" action="{{ url_for('join') }}">
-        <p><label for="name">Name: <input type="text" name="name"></label></p>
-        <p><label for="email">Email: <input type="text" name="email"></label></p>
-        <p><label for="passwd1">Password: <input type="password" name="passwd1"></label></p>
-        <p><label for="passwd2">Re-Type Password: <input type="password" name="passwd2"></label></p>
+        
+        <p><label for="name">Name: <input type="text" name="name" required></label></p>
+        <p><label for="email">Email: <input type="text" name="email" required></label></p>
+        
+        <p><label for="passwd1">Password: <input id="password1" type="password" name="passwd1" required></label></p>
+        <p><label for="passwd2">Confirm Password: <input id="password2" type="password" name="passwd2" required></label></p>
+        <div class="registrationFormAlert" id="checkPasswords"></div>
+
         <p><label for="role">Select Your Role(s):</label><br> 
             <input class="uk-checkbox" type="checkbox" name="role" value="student"><label for="role">Student</label><br>
             <input class="uk-checkbox" type="checkbox" name="role" value="client"><label for="role">Client</label><br>
             <input class="uk-checkbox" type="checkbox" name="role" value="administrator"><label for="role">Administrator</label><br>
 
-        <!--TO DO: implement Ajax to test if passwords match -->
-        <p><button class="uk-button" type="submit">Join</button></p>
+        <p><button class="uk-button" id="button" type="submit">Join</button></p>
     </form>
   </center>
 
 
 
     </div>
-    <!-- JS code would go here -->
-    
+
+<!--JS to check if passwords match-->    
+<script>
+
+function checkPasswords(){
+  var password1 = $("#password1").val();
+  var password2 = $("#password2").val();
+
+  if (password1 != password2){
+    $("#checkPasswords").html("Passwords do not match.");
+  }
+  else{
+    $("#checkPasswords").html("");
+  }
+}
+
+$(document).ready(function () {
+   $("#password1, #password2").keyup(checkPasswords);
+});
+
+</script>    
 
 {% endblock %}

@@ -18,7 +18,7 @@
 
               <input type="hidden" name="projectID" value={{project.pid}}>
 
-              <input class="uk-button" name="approveButton" type="button" value="APPROVE" id="approveButton">
+              <input class="uk-button" name="button" type="button" value="APPROVE" id="approveButton">
             
             </form>
           </td>
@@ -36,7 +36,7 @@
     <!-- JS code goes here -->
     <script>
       
-      $("#projectList").on('click', "[name=approveButton]", function(event) {
+      $("#projectList").on('click', "[name=button]", function(event) {
         console.log('projectList clicked');
         $target = $(event.target);
         var pid = $target.closest("[data-pid]").attr("data-pid");

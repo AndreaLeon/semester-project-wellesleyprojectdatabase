@@ -79,7 +79,9 @@ def join():
 
 
 
-#login 
+#login route which hosts the login page where users can 
+# 1) if they're not already logged in, log in or create an account
+# 2) otherwise logout
 @app.route('/login/', methods=['GET','POST'])
 def login():
   conn = dbconn2.connect(dsn)
@@ -91,7 +93,6 @@ def login():
     else:
       return render_template('login.html',
                               email=flaskemail or "",
-                              allCookies=request.cookies, 
                               role = roleCheck)
   else:
     #case 2: user submitted a form with their name 
@@ -129,49 +130,49 @@ def login():
       return redirect( url_for('index') )
 
 
-#user
+#user route: this route is redirected to from the login route when and if the user is logged in. 
+#this route allows the user to logout
 @app.route('/user/<uid>')
 def user(uid):
   try:
       conn = dbconn2.connect(dsn)
-      roleCheck = updateDB.getRole(conn, session)
-      if 'uid' in session:
-        uid = session['uid']
-        name = session['name']
-        return render_template('greet.html',
-                                name=name,
-                                allCookies=request.cookies,
-                                role = roleCheck
-                               )
-      else:
-          flash('You are not logged in. Please login or join')
-          return redirect( url_for('login') )
+      roleCheck = updateDB.getRole(conn, session) #gets role of user from backend
+      
+      if 'uid' not in session:
+        flash('You are not logged in. Please login or join')
+        return redirect( url_for('login') )
+
+      #uid in session
+      uid = session['uid']
+      name = session['name']
+      return render_template('greet.html',
+                              name=name,
+                              role = roleCheck
+                             )
+          
   except Exception as err:
-      flash('some kind of error '+str(err))
+      flash('Error: '+str(err))
       return redirect( url_for('index') )
 
 
-                           
+#logout route used to logout of a user's account                           
 @app.route('/logout/')
 def logout():
   try:
-    if 'uid' in session:
-      username = session['uid']
-      session.pop('uid')
-      session.pop('name')
-      session.pop('logged_in')
-
-      resp = make_response(redirect(url_for('index')))
-      resp.set_cookie('flaskuid','',expires=0)
-      resp.set_cookie('flaskname','',expires=0)
-
-      flash('You are logged out. Thank you for visiting!')
-      return resp
-    else:
+    if 'uid' not in session:
       flash('You are not logged in. Please login or join')
       return redirect( url_for('index') )
+
+    #uid is in the session  
+    username = session['uid']
+    session.pop('uid')
+    session.pop('name')
+    session.pop('logged_in')
+    flash('You are logged out. Thank you for visiting!')
+    return redirect(url_for('index'))
+
   except Exception as err:
-    flash('some kind of error '+str(err))
+    flash('Error: '+str(err))
     return redirect( url_for('index') )
 
 
