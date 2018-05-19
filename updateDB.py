@@ -133,8 +133,9 @@ def getApplicationsPerClient(conn, uid):
 	particular client
 		By: Parul Koul '''
 	curs = conn.cursor(MySQLdb.cursors.DictCursor)
-	curs.execute('SELECT application.uid, application.pid, project.creator FROM \
-	(application INNER JOIN project ON application.pid = project.pid) WHERE project.creator = %s;', [uid])
+	curs.execute('SELECT application.uid, application.pid, project.creator, \
+	 user.email FROM (application INNER JOIN project ON application.pid = project.pid \
+	 INNER JOIN user ON user.uid = application.uid) WHERE project.creator = %s;', [uid])
 	applications = curs.fetchall()
 	return applications	
 
@@ -145,6 +146,14 @@ def getProfileInfo(conn, uid):
 	curs.execute('SELECT * FROM user WHERE uid=%s;', [uid])
 	profile = curs.fetchone()
 	return profile
+
+def getEmail(conn, uid):
+	''' Gets the email of the user with the given uid.
+		By: Parul Koul '''
+	curs = conn.cursor(MySQLdb.cursors.DictCursor)
+	curs.execute('SELECT user.email FROM user WHERE uid=%s;', [uid])
+	email = curs.fetchone()
+	return email 
 
 # ================================================================
 # This starts the ball rolling, *if* the script is run as a script,

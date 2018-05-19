@@ -11,12 +11,13 @@
   <h1>View Applications</h1>
 
   <table class="uk-table" id="applicationList">
-    <tr><th>Project ID</th><th>Applicant ID</th></tr>
+    <tr><th>Project ID</th><th>Applicant ID</th><th>Applicant Email</th></tr>
     {% if applications %}
       {% for application in applications %}
       <tr class="applicationsRow">
           <td>{{application.pid}}</td>
           <td>{{application.uid}}</td>
+          <td>{{application.email}}</td>
       </tr>
       {% endfor %}
     {% endif %}
