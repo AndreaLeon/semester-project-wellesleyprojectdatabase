@@ -201,17 +201,17 @@ def createProfile():
           bg_info = request.form['bg_info']
           updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
           internship_exp, bg_info, uid)
-          try:
-            f = request.files['resume']
-            mimetype = f.content_type
-            filename = secure_filename(str(uid)+ '.' + str(mimetype.split('/')[1]))
+          f = request.files['resume']
+          mimetype = f.content_type.split('/')[1]
+          if mimetype != 'pdf':
+            flash('Please upload a PDF')
+          else:
+            filename = secure_filename(str(uid)+ '.pdf')
             pathname = 'static/' + filename
             f.save(pathname)
             flash('Upload successful')
-          except Exception as e:
-            flash(e)
-          flash ("Profile Update Submitted")
-          return render_template('profile.html', role = roleCheck, src=url_for('resume',fname=filename))
+            flash ("Profile Update Submitted")
+            return render_template('profile.html', role = roleCheck, src=url_for('resume',fname=filename))
         else:
           return render_template('profile.html', role = roleCheck)
       else:
@@ -383,7 +383,13 @@ def profile():
       if request.method == 'POST':
         return redirect( url_for('createProfile') )
       else:
-        return render_template('viewProfile.html', profile=profile, role = roleCheck)
+        fname = str(uid) + '.pdf'
+        fpath = 'static/' + fname
+        if os.path.isfile(fpath):
+          return render_template('viewProfile.html', profile=profile, role = roleCheck,
+          src=url_for('resume',fname=fname))
+        else:
+          return render_template('viewProfile.html', profile=profile, role = roleCheck, src='')
     else:
       flash('You are not logged in. Please login or join')
       return redirect( url_for('index') )
