@@ -7,13 +7,19 @@
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory, jsonify)
 from werkzeug import secure_filename
+
+UPLOAD_FOLDER = 'static'
+ALLOWED_EXTENSIONS = set(['txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
+
 
 import sys,os,random
 import bcrypt
 import dbconn2
 import json
 import updateDB
+
 
 app.secret_key = 'your secret here'
 # replace that with a random key
@@ -22,6 +28,7 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
                                           '0123456789'))
                            for i in range(20) ])
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 @app.route('/')
@@ -194,8 +201,17 @@ def createProfile():
           bg_info = request.form['bg_info']
           updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
           internship_exp, bg_info, uid)
+          try:
+            f = request.files['resume']
+            mimetype = f.content_type
+            filename = secure_filename(str(uid)+ '.' + str(mimetype.split('/')[1]))
+            pathname = 'static/' + filename
+            f.save(pathname)
+            flash('Upload successful')
+          except Exception as e:
+            flash(e)
           flash ("Profile Update Submitted")
-          return render_template('profile.html', role = roleCheck)
+          return render_template('profile.html', role = roleCheck, src=url_for('resume',fname=filename))
         else:
           return render_template('profile.html', role = roleCheck)
       else:
@@ -208,6 +224,11 @@ def createProfile():
     flash(e)
     flash('Incorrectly filled, try again')
     return redirect( url_for('index') )
+
+@app.route('/resume/<fname>')
+def resume(fname):
+    f = secure_filename(fname)
+    return send_from_directory('static',f)
 
 # route for createProject
 # client type users can create a project to be added to the project DB

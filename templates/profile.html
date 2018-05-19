@@ -8,7 +8,7 @@
 {% block content %}
 
 <h1>Update Profile</h1>
-  <form id="profileForm" method="post">
+  <form id="profileForm" method="post" enctype = "multipart/form-data">
     <p><label for="major">Major: <input type="text" name="major"></label></p>
     <p><label for="prog_languages">Programming languages you have experience with: </label><br>
     <textarea class="uk-textarea" name="prog_languages" rows="2" cols="45" form= "profileForm"></textarea></p>
@@ -21,6 +21,13 @@
     <p><label for="bg_info">Background info: </label><br>
     <textarea class="uk-textarea" name="bg_info" rows="2" cols="45" form= "profileForm"></textarea></p>
     <p><button class="uk-button" type="submit"> Update Profile</button></p>
+    <p><label for="resume">Resume: <input type="file" name="resume"></label>
+      <input type="submit" value="upload"></p>
   </form>
+
+
+  {% if src != '' %}
+  <p> <a href="{{src}}">View Resume</a></p>
+  {% endif %}
     
 {% endblock%}
