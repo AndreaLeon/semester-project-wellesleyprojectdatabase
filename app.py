@@ -7,13 +7,19 @@
 from flask import (Flask, render_template, make_response, url_for, request,
                    redirect, flash, session, send_from_directory, jsonify)
 from werkzeug import secure_filename
+
+UPLOAD_FOLDER = 'static'
+ALLOWED_EXTENSIONS = set(['txt', 'docx', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
+
 
 import sys,os,random
 import bcrypt
 import dbconn2
 import json
 import updateDB
+
 
 app.secret_key = 'your secret here'
 # replace that with a random key
@@ -22,6 +28,7 @@ app.secret_key = ''.join([ random.choice(('ABCDEFGHIJKLMNOPQRSTUVXYZ' +
                                           '0123456789'))
                            for i in range(20) ])
 
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 
 @app.route('/')
@@ -195,8 +202,17 @@ def createProfile():
           bg_info = request.form['bg_info']
           updateDB.updateUser(conn, major, prog_languages, courses, research_exp, 
           internship_exp, bg_info, uid)
-          flash ("Profile Update Submitted")
-          return render_template('profile.html', role = roleCheck)
+          f = request.files['resume']
+          mimetype = f.content_type.split('/')[1]
+          if mimetype != 'pdf':
+            flash('Please upload a PDF')
+          else:
+            filename = secure_filename(str(uid)+ '.pdf')
+            pathname = 'static/' + filename
+            f.save(pathname)
+            flash('Upload successful')
+            flash ("Profile Update Submitted")
+            return render_template('profile.html', role = roleCheck, src=url_for('resume',fname=filename))
         else:
           return render_template('profile.html', role = roleCheck)
       else:
@@ -209,6 +225,11 @@ def createProfile():
     flash(e)
     flash('Incorrectly filled, try again')
     return redirect( url_for('index') )
+
+@app.route('/resume/<fname>')
+def resume(fname):
+    f = secure_filename(fname)
+    return send_from_directory('static',f)
 
 # route for createProject
 # client type users can create a project to be added to the project DB
@@ -358,7 +379,18 @@ def profile():
   try:
     roleCheck = updateDB.getRole(conn, session)
     if 'uid' in session:
-      return render_template('viewProfile.html', role = roleCheck)
+      uid = session['uid']
+      profile = updateDB.getProfileInfo(conn, uid)
+      if request.method == 'POST':
+        return redirect( url_for('createProfile') )
+      else:
+        fname = str(uid) + '.pdf'
+        fpath = 'static/' + fname
+        if os.path.isfile(fpath):
+          return render_template('viewProfile.html', profile=profile, role = roleCheck,
+          src=url_for('resume',fname=fname))
+        else:
+          return render_template('viewProfile.html', profile=profile, role = roleCheck, src='')
     else:
       flash('You are not logged in. Please login or join')
       return redirect( url_for('index') )

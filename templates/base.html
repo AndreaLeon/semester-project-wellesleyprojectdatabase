@@ -30,15 +30,12 @@
           <ul class="uk-navbar-nav">
               <li><a href="{{ url_for('index') }}">Home</a>
               <li><a href="{{ url_for('login') }}">Login/Logout</a>
-              {% if role != '' %}
-              <li><a href="{{ url_for('profile') }}">Profile</a>
-              {% endif %}
               {% if 'admin' in role %}
                 <li><a href="{{ url_for('projectApproval') }}">Approve Pending Projects</a>
               {% endif %}
               {% if 'student' in role %}
+                <li><a href="{{ url_for('profile') }}">Profile</a>
                 <li><a href="{{ url_for('browseProjects') }}">Browse Projects</a>
-                <li><a href="{{ url_for('createProfile') }}">Create/Update Profile</a>
               {% endif %}
               {% if 'client' in role %}
                 <li><a href="{{ url_for('viewApplications')}}">View Applications</a>

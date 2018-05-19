@@ -37,3 +37,8 @@ input#approveButton{
 	color: white;
 }
 
+button#projectButton{
+	border: 2px solid LightBlue;
+	background-color: LightBlue; 
+	color: grey;
+}
